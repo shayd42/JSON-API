@@ -1,0 +1,5 @@
+{
+  "neaName" : "play-app",
+  "sigAlgorithm" : "NIST256P",
+  "automaticFirmwareVersion" : false
+}

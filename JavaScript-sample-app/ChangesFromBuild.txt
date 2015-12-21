@@ -1,0 +1,9 @@
+
+* from build-ninga copy: the executables and the play, static, and certs directories
+
+* strip the napi-server* executables
+
+* copy the ruby scripts from .../api/src/napi-server/ruby/test to the ruby and rename them (remove the 'script-')
+
+* remove start and finish from the ruby client.rb object (no longer part of the JSON API, and will crash if called)
+

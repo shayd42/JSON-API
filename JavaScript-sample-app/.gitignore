@@ -1,0 +1,6 @@
+napi-server
+napi-server-net
+provisions.json
+messages.json
+*.log
+*.err
