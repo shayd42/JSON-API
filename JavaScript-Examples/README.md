@@ -1,16 +1,13 @@
-[return to sample list](/index.html)
-
-----
 
 # API Beta Release 3.1
 
 This release provides a JSON based API supporting the development of Nymi Enabled Applications (NEAs) using websockets over SSL that will work on both Mac OS X and Windows.
 
-This release consists of executables for each of the two platforms and sample code in Javascript.
+This release consists of executables for each of the two platforms and sample code in JavaScript.
 
 The executable provides a HTTPS and WSS server. It only supports secure connections (SSL). This restriction is to accomodate web browser rules that forbid mixed security models, and the need for secure connections from the browser to support things like TOTP (time-based one time passwords)for logins.
 
-#Javascript Sample Code
+#JavaScript Sample Code
 
 There is sample code using the JSON API over WSS included in this release. The samples are fragments of code illustrative of the use of the API.
 
@@ -18,9 +15,9 @@ There is sample code using the JSON API over WSS included in this release. The s
 
 * The sample code is intended to run in a browser. Currently Chrome and Firefox browsers are supported on both Windows and Mac. IE and Safari are not supported because of the way they restrict the use of self-signed SSL certs.
 
-* The sample app uses the Javascript console, so make sure you've got that open and visible.
+* The sample app uses the JavaScript console, so make sure you've got that open and visible.
     
-    (Chrome Mac: View >> Developer >> Javascript Console; Firefox: Tools >> Web Developer >> Web Console)
+    (Chrome Mac: View >> Developer >> JavaScript Console; Firefox: Tools >> Web Developer >> Web Console)
     
     (Chrome Windows: upper right corner menu -> More Tools -> Developer Tools or Ctrl + Shift + I)
 
@@ -64,7 +61,7 @@ The following JSON object illustrates a simple response to a request for informa
 
 ##peek — list provision ids of all currently authenticated Nymi Bands
 
-Peek is similar to the info sample, but it returns information for provisioned devices only. The information is printed to the Javascript console.
+Peek is similar to the info sample, but it returns information for provisioned devices only. The information is printed to the JavaScript console.
 
 ##watch — show changes to state of Nymi Bands in the vicinity
 
@@ -104,7 +101,7 @@ The provisioning process requires a user confirmation stage that can be implemen
 
 1. The user selects or confirms the LED pattern. In order to do this the NEA must be informed of known LED patterns.
 
-The sample code selects one of the LED pattern reported (instead of asking the user to choose) and confirms that to the NEA. Since the samples run in a browser with output to the Javascript console, input isn't possible so the sample code 'pretends' the user chose. This trick is *totally unsuitable* for a real NEA.
+The sample code selects one of the LED pattern reported (instead of asking the user to choose) and confirms that to the NEA. Since the samples run in a browser with output to the JavaScript console, input isn't possible so the sample code 'pretends' the user chose. This trick is *totally unsuitable* for a real NEA.
 
 #<a name="running"></a>Running the NAPI Service
 
@@ -166,7 +163,7 @@ If `automaticFirmwareVersion` is `true` (a boolean JSON value, not a string) the
 
 It is possible to have several napi-servers running simultaneously, but they must be running from different app-directories. To create an app directory just copy the play directory someplace (and remove the provisions.json file)
 
-The static directory, in this release, must be in the same directory as where the executable is run from. It expects to serve html and Javascript files found in that directory. As you experiment with NAPI you can put your scripts into this directory.
+The static directory, in this release, must be in the same directory as where the executable is run from. It expects to serve html and JavaScript files found in that directory. As you experiment with NAPI you can put your scripts into this directory.
 
 There's no difficulty with having different instances of the napi-server running from the same directory and so sharing the static directory. The napi-server never writes to this directory so there's no risk of conflicting changes.
 
@@ -197,7 +194,4 @@ There's no difficulty with having different instances of the napi-server running
 1. As part of the Nymi Band's privacy guarantees, every 15 minutes it will change its bluetooth advertising details, and so appear to be a new device to all NEAs. If that happens during an operation (e.g. provisioning), then there's a possibility that the NEA gets confused between the old device and new device and the operation will fail. If this happens, simply retry the operation.
  
 1. On Windows, when using ctrl+c to kill the Windows Example app, napi-server-net.exe will cause a crash instead of exiting cleanly. This does not occur when the command-prompt/terminal is simply closed.
-
-----
-[return to sample list](/index.html)
 
