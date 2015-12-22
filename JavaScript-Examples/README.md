@@ -11,7 +11,7 @@ The executable provides a HTTPS and WSS server. It only supports secure connecti
 
 There is sample code using the JSON API over WSS included in this release. The samples are fragments of code illustrative of the use of the API.
 
-* Make sure the [NAPI service is running (see below)](#running). You can run the go and go-nymulator scripts provided in the sample app, however, they require the API executable to be in the same folder. 
+* Make sure the [NAPI service is running (see below)](#running-the-napi-service). You can run the go and go-nymulator scripts provided in the sample app, however, they require the API executable to be in the same folder. 
 
 * The sample code is intended to run in a browser. Currently Chrome and Firefox browsers are supported on both Windows and Mac. IE and Safari are not supported because of the way they restrict the use of self-signed SSL certs.
 
@@ -103,7 +103,7 @@ The provisioning process requires a user confirmation stage that can be implemen
 
 The sample code selects one of the LED pattern reported (instead of asking the user to choose) and confirms that to the NEA. Since the samples run in a browser with output to the JavaScript console, input isn't possible so the sample code 'pretends' the user chose. This trick is *totally unsuitable* for a real NEA.
 
-#<a name="running"></a>Running the NAPI Service
+#Running the NAPI Service
 
 There are executables distributed with this release, one for Windows API, and two for Mac API. The single windows executable allows the NEA to connect to both physical Nymi Bands and the Nymulator. On Mac, a different executable is needed for connecting to the physical Nymi Band and the Nymulator.
 
