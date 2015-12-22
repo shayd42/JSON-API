@@ -105,11 +105,17 @@ The sample code selects one of the LED pattern reported (instead of asking the u
 
 #Running the NAPI Service
 
-There are executables distributed with this release, one for Windows API, and two for Mac API. The single windows executable allows the NEA to connect to both physical Nymi Bands and the Nymulator. On Mac, a different executable is needed for connecting to the physical Nymi Band and the Nymulator.
+There are executables distributed with this release, one for Windows API, and two for Mac API. [Download SDK package here.](https://www.nymi.com/dev)
+
+The single windows executable allows the NEA to connect to both physical Nymi Bands and the Nymulator. On Mac, a different executable is needed for connecting to the physical Nymi Band and the Nymulator.
 
 Make sure that executable is placed in the root folder of the samples (same folder as go.sh go.bat etc.)
 
 To run on windows you may need to install [Visual C++ Redistributable for Visual Studio 2015](https://www.microsoft.com/en-ca/download/details.aspx?id=48145)
+
+To Communicate with the Nymi Band on Windows Nymi API is using NBS (Nymi Bluetooth Service). To install NBS download and install [Nymi Lock Control](https://www.nymi.com/got-downloads/?dl=f)
+
+If you are switching between Nymi Band and Nymulator make sure you stop NymiBluetoothService for Nymulator and start it again for Nymi Band. 
 
 The executable is a command line program in this release. Here are the options:
 
@@ -145,8 +151,6 @@ And for windows:
     napi-server-net.exe app play --websocket-port=11000
     napi-server-net.exe nymulator play --websocket-port=11000
     
-To run on windows you may need to install the [Visual C++ Redistributable for Visual Studio 2015](https://www.microsoft.com/en-ca/download/details.aspx?id=48145)
-
 The `play` directory contains a simple config.json file, and after executing will contain a provisions.json file.
 
     {
