@@ -1,4 +1,4 @@
-# Nymi API Beta Release 3.1
+# Nymi JSON API Beta Release 3.1
 
 Nymi is now supporting a JSON based API for the development of Nymi Enabled Applications (NEAs). Initially we are providing websocket servers for Mac OS X and Windows.
 
