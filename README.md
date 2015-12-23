@@ -2,7 +2,7 @@
 
 Nymi is now supporting a JSON based API for the development of Nymi Enabled Applications (NEAs). Initially we are providing websocket servers for Mac OS X and Windows.
 
-[Download SDK package, that includes the websocket servers, here.](https://www.nymi.com/dev)
+[Download a SDK package that includes the websocket servers.](https://www.nymi.com/dev)
 
 In the JavaScript directory you will find several very simple JavaScript based examples of how to use the API to accomplish a few basic tasks:
 
