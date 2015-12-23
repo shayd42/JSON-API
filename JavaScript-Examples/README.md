@@ -1,15 +1,9 @@
 
-# API Beta Release 3.1
-
-This release provides a JSON based API supporting the development of Nymi Enabled Applications (NEAs) using websockets over SSL that will work on both Mac OS X and Windows.
-
-This release consists of executables for each of the two platforms and sample code in JavaScript.
-
-The executable provides a HTTPS and WSS server. It only supports secure connections (SSL). This restriction is to accomodate web browser rules that forbid mixed security models, and the need for secure connections from the browser to support things like TOTP (time-based one time passwords)for logins.
-
 #JavaScript Sample Code
 
 There is sample code using the JSON API over WSS included in this release. The samples are fragments of code illustrative of the use of the API.
+
+* If you haven't already, [download an SDK that includes the websocket server](https://www.nymi.com/dev).
 
 * Make sure the [NAPI service is running (see below)](#running-the-napi-service). You can run the go and go-nymulator scripts provided in the sample app, however, they require the API executable to be in the same folder. 
 
