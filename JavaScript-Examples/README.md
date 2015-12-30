@@ -25,33 +25,34 @@ There is sample code using the JSON API over WSS included in this release. The s
 
 The following JSON object illustrates a simple response to a request for information about Nymi Bands currently in the vicinity. The information provided will be changing in subsequent releases. There's no information included about provisioned Nymi Bands that are not in the vicinity. The information that is provided is excessive and somewhat redundant. The important parts are (after a bit of manual editing):
 
-    {       
-        "devices": [
-          { 
-            "RSSI": -60,
-            "RSSIsmoothed": -60,
-            "handle": 2,
-            "provisioned": false,
-            "state": {
-              "found": "anonymous",
-              "present": "yes"
-            } 
-          },
-          { 
-            "RSSI": -60,
-            "RSSIsmoothed": -60,
-            "handle": 1,
-            "id": "b14542c3eb814a1dfe7ce6060e865913",
-            "key": "9018070e29afb73bb954a73c15a2df09",
-            "provisioned": true,
-            "state": {
-              "found": "authenticated",
-              "present": "yes"
-            }
-          }
-        ]
+```json
+{       
+  "devices": [
+    { 
+      "RSSI": -60,
+      "RSSIsmoothed": -60,
+      "handle": 2,
+      "provisioned": false,
+      "state": {
+        "found": "anonymous",
+        "present": "yes"
+      } 
+    },
+    { 
+      "RSSI": -60,
+      "RSSIsmoothed": -60,
+      "handle": 1,
+      "id": "b14542c3eb814a1dfe7ce6060e865913",
+      "key": "9018070e29afb73bb954a73c15a2df09",
+      "provisioned": true,
+      "state": {
+        "found": "authenticated",
+        "present": "yes"
       }
-
+    }
+  ]
+}
+```
 
 ##peek — list provision ids of all currently authenticated Nymi Bands
 
