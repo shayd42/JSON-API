@@ -1,11 +1,13 @@
+ 
+#JavaScript Sample Code for Desktop
 
-#JavaScript Sample Code
+There is sample code using the JSON API v3.1.4 over WSS included in this release. The samples are fragments of code illustrative of the use of the API on Windows and OS X. The APIs Nymi provides for Android and iOS not discussed here.
 
-There is sample code using the JSON API over WSS included in this release. The samples are fragments of code illustrative of the use of the API.
+* Clone the [GitHub repository Nymi/JSON-API-Example-Code](https://github.com/Nymi/JSON-API-Example-Code), which is the repository you're looking at now, and change directories into this directory.
 
-* If you haven't already, [download an SDK that includes the websocket server](https://www.nymi.com/dev).
+* If you haven't already, [download an SDK that includes the websocket server](https://www.nymi.com/dev) and unpack it into this directory. It will create and populate a subdirectory (`API-Mac-v3.1.4` or `API-Windows-v3.1.4`) that contains the executables and additional documentation [API-Mac-v3.1.4/general-documentation/index.html](API-Mac-v3.1.4/general-documentation/index.html) or [API-Windows-v3.1.4/general-documentation/index.html](API-Windows-v3.1.4/general-documentation/index.html) (depending on how you're reading this, one of those links might be clickable).
 
-* Make sure the [NAPI service is running (see below)](#running-the-napi-service). You can run the go and go-nymulator scripts provided in the sample app, however, they require the API executable to be in the same folder. 
+* Make sure the [NAPI service is running (see below)](#running-the-napi-service). You can run the go and go-nymulator scripts provided, however, they require the API executable to be in the API-Windows-v3.1.4 or API-Mac-v3.1.4 directory. 
 
 * The sample code is intended to run in a browser. Currently Chrome and Firefox browsers are supported on both Windows and Mac. IE and Safari are not supported because of the way they restrict the use of self-signed SSL certs.
 
@@ -100,9 +102,9 @@ The sample code selects one of the LED pattern reported (instead of asking the u
 
 #Running the NAPI Service
 
-There are executables distributed with this release, one for Windows API, and two for Mac API. [Download SDK package here.](https://www.nymi.com/dev)
+There are executables distributed with this release, one for Windows API, and two for Mac API. [Download the SDK package here](https://www.nymi.com/dev) and unpack the archive in this directory (a subdirectory API-Windows-v3.1.4 or API-Mac-v3.1.4 will be created).
 
-The single windows executable allows the NEA to connect to both physical Nymi Bands and the Nymulator. On Mac, a different executable is needed for connecting to the physical Nymi Band and the Nymulator.
+The single windows executable allows the NEA to connect to both physical Nymi Bands and the Nymulator. On Mac, different executables are needed to connect with either physical Nymi Bands or the Nymulator.
 
 Make sure that executable is placed in the root folder of the samples (same folder as go.sh go.bat etc.)
 
