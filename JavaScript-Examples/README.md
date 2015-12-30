@@ -148,11 +148,13 @@ And for windows:
     
 The `play` directory contains a simple config.json file, and after executing will contain a provisions.json file.
 
-    {
-      "neaName" : "play-app",
-      "sigAlgorithm" : "NIST256P",
-      "automaticFirmwareVersion" : false
-    }
+```json
+{
+  "neaName" : "play-app",
+  "sigAlgorithm" : "NIST256P",
+  "automaticFirmwareVersion" : false
+}
+```
 
 The `neaName` is only used for some reporting at this time, it will be more important in future releases. It should be named appropriately for your NEA, and must be between 6 and 18 simple ascii characters in length — no unicode, sorry.
 
