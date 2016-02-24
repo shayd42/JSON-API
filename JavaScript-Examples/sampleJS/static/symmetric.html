@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!--
+Copyright 2016 Nymi Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<html>
+<body>
+  <h1>Get the symmetric key for each nymiband in the vicinity</h1>
+  <h2>(all output is in the javascript console, make sure you have it visible)</h2>
+  <p>
+  If this is the first time symmetric key is requested for this provision then
+  the key created <strong>will not</strong> be guarded by a user gesture. 
+  The user will <strong>never</strong> be asked to perform that gesture when retrieving the key.
+  </p>
+  <p>
+  If the symmetric key is guarded, the user <strong>must</strong> perform the gesture before the key
+  is retrieved. If the gesture is not performed the operation will fail.
+  </p>
+  <p><a href="index.html">sample list</a></p>
+</body>
+<script src="symmetric.js"></script>
+</html>
