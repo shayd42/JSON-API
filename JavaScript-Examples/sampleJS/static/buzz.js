@@ -32,23 +32,27 @@ napiServer.onopen = function () {
 
 napiServer.onmessage = function (event) {
   var authenticated = JSON.parse(event.data).provisionsPresent;
-  console.log("authenticated or identified provisions:", authenticated);
-  var n = authenticated.length;
-
-  napiServer.onmessage = napiServer.waitForOutcomes;
-
-  for (var i = 0; i < n; i++) {
-    var req = {
-      op: "notify",
-      subop: "run",
-      exchange: "exchange-sign-" + authenticated[i] + "-" + Date.now(),
-      pid: authenticated[i],
-      notification: (i % 2) ? "positive" : "negative" // can be true and false as well
-    }
-    napiServer.send(JSON.stringify(req));
-    console.log(i, "notifying:", authenticated[i], req.notification)
+  if(authenticated === undefined){
+    console.log("There are no authenticated or identified provisions.");
   }
+  else{
+    console.log("authenticated or identified provisions:", authenticated);
+    var n = authenticated.length;
 
+    napiServer.onmessage = napiServer.waitForOutcomes;
+
+    for (var i = 0; i < n; i++) {
+      var req = {
+        op: "notify",
+        subop: "run",
+        exchange: "exchange-sign-" + authenticated[i] + "-" + Date.now(),
+        pid: authenticated[i],
+        notification: (i % 2) ? "positive" : "negative" // can be true and false as well
+      }
+      napiServer.send(JSON.stringify(req));
+      console.log(i, "notifying:", authenticated[i], req.notification)
+    }
+  }
 }
 
 napiServer.waitForOutcomes = function (event) {
