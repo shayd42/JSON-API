@@ -24,7 +24,6 @@ napiServer.onopen = function(){
   var req = {
     op: "info",                         // To request info, the op is 'info' and the subop is 'get'
     subop: "get",
-    devices: true,                      // we want information about any nymi bands in the vicinity
     exchange: "exchange-" + Date.now()  // this is a unique value to match a response to a request
   };
 
