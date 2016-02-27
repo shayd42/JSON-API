@@ -109,5 +109,5 @@ A few notes:
 
 1. The napi-server may start using a lot of CPU (100% of one core). This is a bug. The service is still working so you might not notice this. If this happens you should restart the napi-server at your convenience.
 
-1. On Windows, when using ctrl+c to kill `napi-server-net.exe` will cause a crash instead of exiting cleanly. This does not occur when the command-prompt/terminal is simply closed.
+1. On Windows, attempting to ctrl+c to kill napi-server-net.exe will cause it to hang. Instead, close the command prompt it was run from. Prepending `start` when initially running will make this less cumbersome.
 
