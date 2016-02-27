@@ -12,7 +12,7 @@ To experiment with the samples:
 1. **[Download and unpack the Nymi SDK](https://www.nymi.com/get_started)** for your platform, either Windows or Mac OS X (10.10 or 10.11)
 1. Clone or fork this repository
 1. Have a terminal open and make your sure current working directory is this directory
-1. Have a recently updated installation of the Chrome browser
+1. Have a recently updated installation of the Chrome browser running
 1. The Nymulator is running.
 
 ## Running the Nymulator
