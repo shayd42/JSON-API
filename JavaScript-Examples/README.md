@@ -86,6 +86,8 @@ The `sampleJS` directory is the 'root' of a tiny webapp. If Chrome is your defau
 
 [https://127.0.0.1:11000](https://127.0.0.1:11000)
 
+**Notice that that's an HTTPS _not_ HTTP**
+
 And you're running the samples!
 
 _**Do not forget that the JavaScript Console must be open in order to see anything happening!**_
