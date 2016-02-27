@@ -1,11 +1,139 @@
  
-#JavaScript Sample Code for Desktop
+##JavaScript Sample Code for Desktop
 
-There is sample code using the JSON API v3.1.4 over WSS included in this release. The samples are fragments of code illustrative of the use of the API on Windows and OS X. The APIs Nymi provides for Android and iOS not discussed here.
+This is the sample code demonstrating the JSON API v3.1beta2 over secure websockets (WSS). The samples are fragments of code illustrative of the use of the JSON API to obtain specific outcomes. They don't constitute an *application* per se. And there's no real attempt to handle errors or unexpected situations.
 
-* Clone the [GitHub repository Nymi/JSON-API-Example-Code](https://github.com/Nymi/JSON-API-Example-Code), which is the repository you're looking at now, and change directories into this directory.
+These samples require a recent version of the Chrome browser. All samples except the roaming authentication samples will work with FireFox. Neither Safari nor IE will work because neither will allow self-signed TLS certs to be used for the WSS connections. 
 
-* If you haven't already, [download an SDK that includes the websocket server](https://www.nymi.com/dev) and unpack it into this directory. It will create and populate a subdirectory (`API-Mac-v3.1.4` or `API-Windows-v3.1.4`) that contains the executables and additional documentation [API-Mac-v3.1.4/general-documentation/index.html](API-Mac-v3.1.4/general-documentation/index.html) or [API-Windows-v3.1.4/general-documentation/index.html](API-Windows-v3.1.4/general-documentation/index.html) (depending on how you're reading this, one of those links might be clickable).
+To experiment with the samples:
+
+1. **[Download and unpack the Nymi SDK](https://www.nymi.com/get_started)** for your platform, either Windows or Mac OS X (10.10 or 10.11)
+1. Clone the this repository
+1. Have a terminal open and make your sure current working directory is this directory
+1. Have a recently updated installation of the Chrome browser
+1. The Nymulator is running.
+
+## Running the Nymulator
+
+We strongly suggest that your initial experiments with these JavaScript samples be done against the Nymulator. The Nymulator simulates up to six Nymi Bands and is intended to facilitate the development of NEAs. [The use of the Nymulator is described here.](https://downloads.nymi.com/sdkDoc/doc-v3.1.5.326-326_5df03a4/index.html#using-the-nymulator)
+
+### OS X Nymulator Considerations
+
+You might want to move the Nymulator.app distributed with the SDK into your `/Applications` directory.
+
+On OS X, "app nap" is on for the Nymulator. "App Nap" is a power saving optimisation of OS X that puts applications that are not visible into a suspended state (i.e. made to 'nap') where they are not using the CPU. The Nymulator must generate a continuous stream of events in order to simulate actual Nymi Bands. If the Nymulator is napping it can't generate these events and the JSON NAPI process will assume all the simulated Nymi Bands have "gone away". On some OS X machines the Nymulator must actually be *active,* which is totally impractical. App nap can be disabled for the Nymulator, as it can be for most applications on OS X, by executing the following line on a terminal:
+
+```bash
+defaults write com.Nymi.Nymulator NSAppSleepDisabled -bool YES
+```
+
+We'll deal with this in a future release of the SDK.
+
+## Running the WSS NAPI Process
+
+There are executables distributed with the SDK for Windows and OS X. These are intended to be used from the command line as there are arguments required. The command line arguments are the same for both Windows and OS X. If you double click on the executables they won't work properly.
+
+### Windows
+
+There is a single executable, `napi-wss-net.exe` and several DLLs distributed with the SDK.
+
+### OS X
+
+There are two executables: `napi-wss` and `napi-wss-nymulator`
+
+### Running
+
+```
+napi-wss(-nymulator) v3.1beta2: a single application websocket based NAPI server
+
+    Usage:
+      napi-wss            <nea-directory> [--websocket=<addr>] [--log=<file>] [--verbose | --be-very-verbose]
+      napi-wss            (-h | --help)
+      napi-wss            --version
+
+    Options:
+      <nea-directory>     Root directory of the Nymi Enabled Application
+      --websocket=<addr>  Address on which to listen for websocket connections [default: 127.0.0.1:11000].
+      --log=<file>        The log file to append to (relative paths from <nea-directory>) [default: napi-wss.log].
+
+      --verbose           Be verbose.
+      --be-very-verbose   Be very verbose.
+
+      --version           Show version.
+      -h --help           Show this information.
+```
+
+## ------------------------------------------------------------------------------------
+
+There are executables distributed with this release, one for Windows API, and two for Mac API. [Download the SDK package here](https://www.nymi.com/dev) and unpack the archive in this directory (a subdirectory API-Windows-v3.1.4 or API-Mac-v3.1.4 will be created).
+
+The single windows executable allows the NEA to connect to both physical Nymi Bands and the Nymulator. On Mac, different executables are needed to connect with either physical Nymi Bands or the Nymulator.
+
+Make sure that executable is placed in the root folder of the samples (same folder as go.sh go.bat etc.)
+
+To run on windows you may need to install [Visual C++ Redistributable for Visual Studio 2015](https://www.microsoft.com/en-ca/download/details.aspx?id=48145)
+
+To Communicate with the Nymi Band on Windows Nymi API is using NBS (Nymi Bluetooth Service). To install NBS download and install [Nymi Lock Control](https://www.nymi.com/got-downloads/?dl=f)
+
+If you are switching between Nymi Band and Nymulator make sure you stop NymiBluetoothService for Nymulator and start it again for Nymi Band. 
+
+The executable is a command line program in this release. Here are the options:
+
+    napi-server(-net): a single application websocket based NAPI server
+
+        Usage:
+          napi-server app                [<app-directory>] --websocket-port=<websocket-port>
+                                         [--verbose | --be-very-verbose]
+          napi-server nymulator          [<app-directory>] --websocket-port=<websocket-port> 
+                                         [--port=<port>] [--host=<host>] [--verbose | --be-very-verbose]
+          napi-server                    (-h | --help)
+          napi-server                    --version
+
+        Options:
+          <app-directory>                Root directory of the application [default: "."].
+          --websocket-port <wsport>      Port on which to listen for websocket connections [default: 11000].
+
+          --port <port>                  Nymulator port to use [default: 9089].
+          --host <host>                  Nymulator host to use [default: 127.0.0.1].
+
+          --verbose                      Be verbose.
+          --be-very-verbose              Be very verbose.
+          --version                      Show version.
+          -h --help                      Show this information.
+
+The sample apps can be run with one of the following OS X command lines:
+
+    ./napi-server app play --websocket-port=11000
+    ./napi-server-net nymulator play --websocket-port=11000
+    
+And for windows:
+
+    napi-server-net.exe app play --websocket-port=11000
+    napi-server-net.exe nymulator play --websocket-port=11000
+    
+The `play` directory contains a simple config.json file, and after executing will contain a provisions.json file.
+
+```json
+{
+  "neaName" : "play-app",
+  "sigAlgorithm" : "NIST256P",
+  "automaticFirmwareVersion" : false
+}
+```
+
+The `neaName` is only used for some reporting at this time, it will be more important in future releases. It should be named appropriately for your NEA, and must be between 6 and 18 simple ascii characters in length — no unicode, sorry.
+
+The `sigAlgorithm` is the default algorithm to use for signing, the choices are `NIST256P` or `SECP256K`.
+
+If `automaticFirmwareVersion` is `true` (a boolean JSON value, not a string) then whenever a Nymi Band appears the napi-server will attempt to determine its firmware version. This is not normally needed by the NEA and so is `false` by default.
+
+It is possible to have several napi-servers running simultaneously, but they must be running from different app-directories. To create an app directory just copy the play directory someplace (and remove the provisions.json file)
+
+The static directory, in this release, must be in the same directory as where the executable is run from. It expects to serve html and JavaScript files found in that directory. As you experiment with NAPI you can put your scripts into this directory.
+
+There's no difficulty with having different instances of the napi-server running from the same directory and so sharing the static directory. The napi-server never writes to this directory so there's no risk of conflicting changes.
+
+## ------------------------------------------------------------------------------------
 
 * Make sure the [NAPI service is running (see below)](#running-the-napi-service). You can run the go and go-nymulator scripts provided, however, they require the API executable to be in the API-Windows-v3.1.4 or API-Mac-v3.1.4 directory. 
 
@@ -102,73 +230,6 @@ The sample code selects one of the LED pattern reported (instead of asking the u
 
 #Running the NAPI Service
 
-There are executables distributed with this release, one for Windows API, and two for Mac API. [Download the SDK package here](https://www.nymi.com/dev) and unpack the archive in this directory (a subdirectory API-Windows-v3.1.4 or API-Mac-v3.1.4 will be created).
-
-The single windows executable allows the NEA to connect to both physical Nymi Bands and the Nymulator. On Mac, different executables are needed to connect with either physical Nymi Bands or the Nymulator.
-
-Make sure that executable is placed in the root folder of the samples (same folder as go.sh go.bat etc.)
-
-To run on windows you may need to install [Visual C++ Redistributable for Visual Studio 2015](https://www.microsoft.com/en-ca/download/details.aspx?id=48145)
-
-To Communicate with the Nymi Band on Windows Nymi API is using NBS (Nymi Bluetooth Service). To install NBS download and install [Nymi Lock Control](https://www.nymi.com/got-downloads/?dl=f)
-
-If you are switching between Nymi Band and Nymulator make sure you stop NymiBluetoothService for Nymulator and start it again for Nymi Band. 
-
-The executable is a command line program in this release. Here are the options:
-
-    napi-server(-net): a single application websocket based NAPI server
-
-        Usage:
-          napi-server app                [<app-directory>] --websocket-port=<websocket-port>
-                                         [--verbose | --be-very-verbose]
-          napi-server nymulator          [<app-directory>] --websocket-port=<websocket-port> 
-                                         [--port=<port>] [--host=<host>] [--verbose | --be-very-verbose]
-          napi-server                    (-h | --help)
-          napi-server                    --version
-
-        Options:
-          <app-directory>                Root directory of the application [default: "."].
-          --websocket-port <wsport>      Port on which to listen for websocket connections [default: 11000].
-
-          --port <port>                  Nymulator port to use [default: 9089].
-          --host <host>                  Nymulator host to use [default: 127.0.0.1].
-
-          --verbose                      Be verbose.
-          --be-very-verbose              Be very verbose.
-          --version                      Show version.
-          -h --help                      Show this information.
-
-The sample apps can be run with one of the following OS X command lines:
-
-    ./napi-server app play --websocket-port=11000
-    ./napi-server-net nymulator play --websocket-port=11000
-    
-And for windows:
-
-    napi-server-net.exe app play --websocket-port=11000
-    napi-server-net.exe nymulator play --websocket-port=11000
-    
-The `play` directory contains a simple config.json file, and after executing will contain a provisions.json file.
-
-```json
-{
-  "neaName" : "play-app",
-  "sigAlgorithm" : "NIST256P",
-  "automaticFirmwareVersion" : false
-}
-```
-
-The `neaName` is only used for some reporting at this time, it will be more important in future releases. It should be named appropriately for your NEA, and must be between 6 and 18 simple ascii characters in length — no unicode, sorry.
-
-The `sigAlgorithm` is the default algorithm to use for signing, the choices are `NIST256P` or `SECP256K`.
-
-If `automaticFirmwareVersion` is `true` (a boolean JSON value, not a string) then whenever a Nymi Band appears the napi-server will attempt to determine its firmware version. This is not normally needed by the NEA and so is `false` by default.
-
-It is possible to have several napi-servers running simultaneously, but they must be running from different app-directories. To create an app directory just copy the play directory someplace (and remove the provisions.json file)
-
-The static directory, in this release, must be in the same directory as where the executable is run from. It expects to serve html and JavaScript files found in that directory. As you experiment with NAPI you can put your scripts into this directory.
-
-There's no difficulty with having different instances of the napi-server running from the same directory and so sharing the static directory. The napi-server never writes to this directory so there's no risk of conflicting changes.
 
 #Known Issues
 
