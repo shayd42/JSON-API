@@ -39,7 +39,7 @@ There are executables distributed with the SDK for Windows and OS X. These are i
 
 There is a single executable, `napi-wss-net.exe` and several (MinGW) DLLs distributed with the SDK.
 
-Either put the executable and all of its DLLs on your execution path, or use the path when running the NAPI process.
+Either put the executable and all of its DLLs on your execution path, or specify the path when running the NAPI process.
 
 To communicate with actual Nymi Bands you must run the Nymi Bluetooth Service (NBS). An installer for NBS is included in the SDK download. `napi-wss-net.exe` assumes that the version of NBS is the one included in the SDK.
 
@@ -59,7 +59,7 @@ So, assuming:
 
 1. you've put the SDK executables on your path as discussed above
 1. the Nymulator is running (now, _**before**_ you start the JSON NAPI process)
-1. you've changed directories into the `JavaScript-Examples` directory of the cloned or forked `github.com/Nymi/JSON-API` repository
+1. you've changed directories into the `JavaScript-Examples` directory of the cloned or forked `[github.com/Nymi/JSON-API](https://github.com/Nymi/JSON-API) repository.
 1. you're running a recent version of Chrome, and you've opened Chrome's JavaScript Console. The JavaScript samples write to the `console.log` *not* to HTML.
 
     (Chrome Mac: View >> Developer >> JavaScript Console)
@@ -84,9 +84,7 @@ If all is well the JSON NAPI process is running in this terminal window.
 
 The `sampleJS` directory is the 'root' of a tiny webapp. If Chrome is your default browser, you can click on the link, otherwise you should open the URL in Chrome:
 
-[https://127.0.0.1:11000](https://127.0.0.1:11000)
-
-**Notice that that's an HTTPS _not_ HTTP**
+[https://127.0.0.1:11000](https://127.0.0.1:11000) _**Notice that that's an HTTPS not HTTP**_
 
 And you're running the samples!
 
@@ -99,19 +97,17 @@ In the `sampleJS` directory will be a few files:
 1. a file called `provisions.json` that is the JSON NAPI's "database"
 1. a directory called `static` which contains some static assets such as HTML and JavaScript
 
-A couple notes:
+A few notes:
 
 1. It is possible to have several napi-servers running simultaneously, but they must be running from different app-directories. To create an app directory just copy the play directory someplace (and remove the provisions.json file)
-1. The directory layout is different in this release of NAPI, and things will change again in the next beta3.
+1. The directory layout is different in this release of NAPI, and things will change again in beta3.
 1. We are using self-signed certs for SSL and we've included some in the release -- **do not** use these for real NEAs. Using self-signed certs means that you will be warned about security issues and will have to allow access to the page on first use. 
 
 ##Known Issues
 
 1. In this release there is a server running the Nymi API communicating to a browser window using JSON over a secure websocket. The NEA is actually the JSON NAPI process combined with every browser window connected to it. This is somewhat counterintuitive and may lead to some confusion. It's possible to connect multiple browsers simultaneously to the napi server. This works, but should be thought of as a multiple window user interface to a single NEA. The samples make no attempt to do this "right". If you run two instances of provisioning sample you will almost certainly encounter unexpected behaviour. On the other hand, you can have as many windows running the watch, peek, and info sample apps as you wish, even concurrently with a *single* provisioning instance.
 
-1. The napi-server may start using a lot of CPU (100% of one core). This is a bug. When this happens you should restart the napi-server.
-
-1. Multiple simultaneous connections from different browser windows/tabs are allowed. The intention was to allow re-connections, but the potential utility of this is high and so we want to support it more fully in future releases.
+1. The napi-server may start using a lot of CPU (100% of one core). This is a bug. The service is still working so you might not notice this. If this happens you should restart the napi-server at your convenience.
 
 1. On Windows, when using ctrl+c to kill `napi-server-net.exe` will cause a crash instead of exiting cleanly. This does not occur when the command-prompt/terminal is simply closed.
 
