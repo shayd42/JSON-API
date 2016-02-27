@@ -21,7 +21,7 @@ We strongly suggest that your initial experiments with these JavaScript samples 
 
 ### OS X Nymulator Considerations
 
-You might want to move the Nymulator.app distributed with the SDK into your `/Applications` directory.
+You might want to move the `Nymulator.app` distributed with the SDK into your `/Applications` directory.
 
 On OS X, "app nap" is on for the Nymulator. "App Nap" is a power saving optimisation of OS X that puts applications that are not visible into a suspended state (i.e. made to 'nap') where they are not using power consuming resources like the CPU. The Nymulator must generate a continuous stream of events in order to simulate actual Nymi Bands. If the Nymulator is napping it can't generate these events and the JSON NAPI process will assume all the simulated Nymi Bands have "gone away". On some OS X machines the Nymulator must actually be *active,* which is totally impractical. App nap can be disabled for the Nymulator, as it can be for most applications on OS X, by executing the following line on a terminal (you only have to do this once):
 
