@@ -35,11 +35,11 @@ There are executables distributed with the SDK for Windows and OS X. These are i
 
 ### Windows
 
-There is a single executable, `napi-wss-net.exe` and several DLLs distributed with the SDK.
+There is a single executable, `napi-wss-net.exe` and several (MinGW) DLLs distributed with the SDK.
 
 ### OS X
 
-There are two executables: `napi-wss` and `napi-wss-nymulator`
+There are two executables: `napi-wss` and `napi-wss-nymulator`. `napi-wss` uses Core Bluetooth, `napi-wss-nymulator` uses a different mechanism to communicate with the Nymulator.
 
 ### Running
 
