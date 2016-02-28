@@ -77,7 +77,7 @@ napi-wss-nymulator sampleJS
 on Windows
 
 ```
-napi-wss-net.exe sampleJS
+start napi-wss-net.exe sampleJS
 ```
 
 If all is well the JSON NAPI process is running in this terminal window.
