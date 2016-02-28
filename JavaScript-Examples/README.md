@@ -41,7 +41,7 @@ There is a single executable, `napi-wss-net.exe` and several (MinGW) DLLs distri
 
 Either put the executable and all of its DLLs on your execution path, or specify the path when running the NAPI process.
 
-To communicate with actual Nymi Bands you must run the Nymi Bluetooth Service (NBS). An installer for NBS is included in the SDK download. `napi-wss-net.exe` assumes that the version of NBS is the one included in the SDK.
+**To communicate with actual Nymi Bands you must run the Nymi Bluetooth Service (NBS).** An installer for NBS is included in the SDK download. `napi-wss-net.exe` assumes that the version of NBS is the one included in the SDK.
 
 The Nymulator and NBS cannot be running simultaneously, so if you want to run the Nymulator (which we recommend for experimenting with these JavaScript fragments) you will need to stop the NBS process. This will cause any NEAs you have running to stop working.
 
