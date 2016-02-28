@@ -105,9 +105,11 @@ A few notes:
 
 ##Known Issues
 
-1. In this release there is a server running the Nymi API communicating to a browser window using JSON over a secure websocket. The NEA is actually the JSON NAPI process combined with every browser window connected to it. This is somewhat counterintuitive and may lead to some confusion. It's possible to connect multiple browsers simultaneously to the napi server. This works, but should be thought of as a multiple window user interface to a single NEA. The samples make no attempt to do this "right". If you run two instances of provisioning sample you will almost certainly encounter unexpected behaviour. On the other hand, you can have as many windows running the watch, peek, and info sample apps as you wish, even concurrently with a *single* provisioning instance.
+1. On Windows, using ctrl+c to kill napi-server-net.exe will cause it to hang. Instead, close the command prompt it was run from. Prepending `start` when initially running will make this less cumbersome.
 
-1. The napi-server may start using a lot of CPU (100% of one core). This is a bug. The service is still working so you might not notice this. If this happens you should restart the napi-server at your convenience.
+1. On occasion, the the JSON API process will start using a lot of CPU (100% of one core). This is a bug. The JSON API is still working so you might not notice this happening. If it happens you should restart the napi-server at your convenience.
 
-1. On Windows, attempting to ctrl+c to kill napi-server-net.exe will cause it to hang. Instead, close the command prompt it was run from. Prepending `start` when initially running will make this less cumbersome.
+1. The JSON API process may not be able to communicate with a Nymi Band after it has been unclasped and reauthenticated. This applies to both physical Nymi Bands and the Nymulator. If this happens the JSON API process should be restarted.
+
+1. This isn't so much a bug as a point of confusion: In this release there is a server running the Nymi API communicating to a browser window using JSON over a secure websocket. The NEA is actually the JSON NAPI process combined with every browser window connected to it. This is somewhat counterintuitive and may lead to some confusion. It's possible to connect multiple browsers simultaneously to the napi server. This works, but should be thought of as a multiple window user interface to a single NEA. The samples make no attempt to do this "right". If you run two instances of provisioning sample you will almost certainly encounter unexpected behaviour. On the other hand, you can have as many windows running the watch, peek, and info sample apps as you wish, even concurrently with a *single* provisioning instance.
 
