@@ -17,7 +17,7 @@ To experiment with the samples:
 
 ## Running the Nymulator
 
-We strongly suggest that your initial experiments with these JavaScript samples be done against the Nymulator. The Nymulator simulates up to six Nymi Bands and is intended to facilitate the development of NEAs. [The use of the Nymulator is described here.](https://downloads.nymi.com/sdkDoc/doc-v3.1.5.326-326_5df03a4/index.html#using-the-nymulator)
+We strongly suggest that your initial experiments with these JavaScript samples be done against the Nymulator. The Nymulator simulates up to six Nymi Bands and is intended to facilitate the development of NEAs. [The use of the Nymulator is described here.](https://downloads.nymi.com/sdkDoc/doc-v3.1.5.403-403_1d2a591/index.html#using-the-nymulator)
 
 ### OS X Nymulator Considerations
 
