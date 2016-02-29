@@ -28,11 +28,12 @@ napiServer.onopen = function () {
 }
 
 napiServer.onmessage = function (event) {
-  var resp = JSON.parse(event.data)
-  if("info" == resp.op){
-    var authenticated = resp.provisionsPresent;
+  var msg = JSON.parse(event.data)
+  if("info" == msg.op){
+    var authenticated = msg.provisionsPresent;
     if(authenticated === undefined){
-      var txt = document.createTextNode("there are " + resp.nymiband.length + " Nymi Bands in the area, none of them are provisioned");
+      var txt = document.createTextNode("there are " + msg.nymiband.length +
+                                        " Nymi Bands recently observed, none of them provisioned");
       document.getElementById("outcome").appendChild(txt);
     }
     else{
@@ -44,7 +45,9 @@ napiServer.onmessage = function (event) {
         node.appendChild(txt);
         document.getElementById("pids").appendChild(node);
       }
-      var txt = document.createTextNode("there are " + resp.nymiband.length + " Nymi Bands in the area, " + authenticated.length + " provisioned");
+      var txt = document.createTextNode("there are " + msg.nymiband.length +
+                                        " Nymi Bands recently observed, " + authenticated.length +
+                                        " provisioned");
       document.getElementById("outcome").appendChild(txt);
     }
   }

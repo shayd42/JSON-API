@@ -32,6 +32,10 @@ napiServer.onopen = function(){
 
 napiServer.onmessage = function(event){
   var msg = JSON.parse(event.data);    // when we get the response, parse it into a JS object
-  console.log("message: ", msg);
+  if("info" == msg.op){
+    var txt = document.createTextNode(JSON.stringify(msg, null, 2));
+    document.getElementById("outcome").appendChild(txt);
+    console.log("message: ", msg);
+  }
 }
 
