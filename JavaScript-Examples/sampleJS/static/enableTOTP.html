@@ -21,12 +21,13 @@ limitations under the License.
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>samplJS :: enable TOTP</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/samples.css">
 </head>
 <body>
   <h1>Enable TOTP for bound nymi bands in the vicinity</h1>
-  <h2>(all output is in the javascript console, make sure you have it visible)</h2>
-  <p><a href="index.html">sample list</a></p>
+  <div class="callout callout-warning"><p class="lead">all output is in the javascript console, make sure you have it visible</p></div>
+  <div><a class="btn btn-default" href="index.html">Done</a></div>
+  <script src="sjcl/sjcl.js"></script>
+  <script src="enableTOTP.js"></script>
 </body>
-<script src="sjcl/sjcl.js"></script>
-<script src="enableTOTP.js"></script>
 </html>

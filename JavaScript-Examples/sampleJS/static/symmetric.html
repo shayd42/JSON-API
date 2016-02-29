@@ -21,20 +21,21 @@ limitations under the License.
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>samplJS :: symmetric keys (unguarded)</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/samples.css">
 </head>
 <body>
   <h1>Get the symmetric key for each nymiband in the vicinity</h1>
-  <h2>(all output is in the javascript console, make sure you have it visible)</h2>
-  <p>
+  <div class="callout callout-default"><p class="lead">
   If this is the first time symmetric key is requested for this provision then
   the key created <strong>will not</strong> be guarded by a user gesture. 
   The user will <strong>never</strong> be asked to perform that gesture when retrieving the key.
-  </p>
-  <p>
+  </p></div>
+  <div class="callout callout-default"><p class="lead">
   If the symmetric key is guarded, the user <strong>must</strong> perform the gesture before the key
   is retrieved. If the gesture is not performed the operation will fail.
-  </p>
-  <p><a href="index.html">sample list</a></p>
+  </p></div>
+  <div class="callout callout-warning"><p class="lead">all output is in the javascript console, make sure you have it visible</p></div>
+  <div><a class="btn btn-default" href="index.html">Done</a></div>
+  <script src="symmetric.js"></script>
 </body>
-<script src="symmetric.js"></script>
 </html>
