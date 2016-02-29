@@ -14,8 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-console.log("peek sample");
-
 // open a websocket to the napi service
 var napiServer = new WebSocket("wss://127.0.0.1:11000/napi");
 
@@ -30,8 +28,25 @@ napiServer.onopen = function () {
 }
 
 napiServer.onmessage = function (event) {
-  console.log("response:", JSON.parse(event.data))
-  var authenticated = JSON.parse(event.data).provisionsPresent;
-  console.log("authenticated or identified provisions:", authenticated);
+  var resp = JSON.parse(event.data)
+  if("info" == resp.op){
+    var authenticated = resp.provisionsPresent;
+    if(authenticated === undefined){
+      var txt = document.createTextNode("there are " + resp.nymiband.length + " Nymi Bands in the area, none of them are provisioned");
+      document.getElementById("outcome").appendChild(txt);
+    }
+    else{
+      var txt = document.createTextNode("PIDs");
+      document.getElementById("pids-title").appendChild(txt);
+      for(var i = 0; i < authenticated.length; i++){
+        var node = document.createElement("li");
+        var txt = document.createTextNode(authenticated[i]);
+        node.appendChild(txt);
+        document.getElementById("pids").appendChild(node);
+      }
+      var txt = document.createTextNode("there are " + resp.nymiband.length + " Nymi Bands in the area, " + authenticated.length + " provisioned");
+      document.getElementById("outcome").appendChild(txt);
+    }
+  }
 }
 

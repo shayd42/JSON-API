@@ -21,16 +21,28 @@ limitations under the License.
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>samplJS</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/samples.css">
 </head>
 <body>
+  <div class="container-fluid">
+  <div class="row">
   <h1>NAPI Samples</h1>
-  <ol>
+  <h2>Informational</h2>
+  <div>
+  <ol class="list-unstyled">
     <li><a href="info.html">get info on all nymi bands in the vicinity</a></li>
     <li><a href="peek.html">check for authenticated nymi bands in the vicinity</a></li>
     <li><a href="watch.html">watch continuously for certain events</a></li>
+  </ol>
+  </div>
+  <h2>Authentication</h2>
+  <ol class="list-unstyled">
     <li><a href="provision.html">provision one nymi band</a></li>
     <li><a href="registerRA.html">register with roaming authenticator</a></li>
     <li><a href="roamingAuth.html">roaming authenticate</a></li>
+  </ol>
+  <h2>Operations on Provisioned Nymi Bands</h2>
+  <ol class="list-unstyled">
     <li><a href="random.html">generate a pseudo random number</a></li>
     <li><a href="buzz.html">buzz</a></li>
     <li><a href="sign.html">sign a SHA-256 hash</a></li>
@@ -39,5 +51,7 @@ limitations under the License.
     <li><a href="enableTOTP.html">enable TOTP</a></li>
     <li><a href="getTOTP.html">retrieve TOTP</a></li>
   </ol>
+  </div>
+  </div>
 </body>
 </html>
