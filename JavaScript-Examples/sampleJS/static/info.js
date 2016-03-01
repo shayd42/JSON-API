@@ -21,6 +21,10 @@ console.log("info sample");
 var napiServer = new WebSocket("wss://127.0.0.1:11000/napi");
 
 napiServer.onopen = function(){
+  napiServer.getInfo();
+}
+
+napiServer.getInfo = function(){
   var req = {
     op: "info",                         // To request info, the op is 'info' and the subop is 'get'
     subop: "get",
@@ -33,6 +37,11 @@ napiServer.onopen = function(){
 napiServer.onmessage = function(event){
   var msg = JSON.parse(event.data);    // when we get the response, parse it into a JS object
   if("info" == msg.op){
+    var node = document.getElementById("outcome");
+    while (node.firstChild) {
+      node.removeChild(node.firstChild);
+    }
+
     var txt = document.createTextNode(JSON.stringify(msg, null, 2));
     document.getElementById("outcome").appendChild(txt);
     console.log("message: ", msg);

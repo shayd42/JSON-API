@@ -24,10 +24,13 @@ limitations under the License.
   <link rel="stylesheet" href="css/samples.css">
 </head>
 <body>
-  <h1>Get Iinfo on all Nymi Bands Recently Observed</h1>
+  <h1>Get Info on All Nymi Bands Recently Observed</h1>
   <div class="callout callout-primary"><p class="lead">It may be easier to inspect this in the javascript console</p></div>
   <textarea id="outcome" rows="30" cols="80"></textarea>
-  <div><a class="btn btn-default" href="index.html">Done</a></div>
+  <div>
+    <a class="btn btn-default" href="index.html">Done</a>
+    <button class="btn btn-primary" onclick="napiServer.getInfo();">Refresh Info</button>
+  </div>
   <script src="info.js"></script>
 </body>
 </html>
