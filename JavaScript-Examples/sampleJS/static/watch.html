@@ -25,12 +25,47 @@ limitations under the License.
 </head>
 <body>
   <h1>watch continuously for certain events</h1>
+  <div class="row">
+    <div class="col-md-4">
+      <h4>Presence</h4>
+    <ul class="list-unstyled">
+      <li><input id="on-found-change" type="checkbox" onchange="napiServer.subscribe()" value="" checked> <label for="on-found-change">found-change</label></li>
+      <li><input id="on-presence-change" type="checkbox" onchange="napiServer.subscribe()" value="" checked> <label for="on-presence-change">presence-change</label></li>
+      <li><input id="on-proximity-change" type="checkbox" onchange="napiServer.subscribe()" value="" checked> <label for="on-proximity-change">proximity-change</label></li>
+    </ul>
+    </div>
+    <div class="col-md-4">
+      <h4>Misc</h4>
+    <ul class="list-unstyled">
+      <li><input id="on-firmware-version" type="checkbox" onchange="napiServer.subscribe()" value=""> <label for="on-firmware-version">firmware-version</label></li>
+      <li><input id="on-new-nymi-nonce" type="checkbox" onchange="napiServer.subscribe()" value=""> <label for="on-new-nymi-nonce">new-nymi-nonce</label></li>
+      <li><input id="on-provision" type="checkbox" onchange="napiServer.subscribe()" value=""> <label for="on-provision">provision</label></li>
+      <li><input id="on-approached" type="checkbox" onchange="napiServer.subscribe()" value=""> <label for="on-approached">approached</label></li>
+    </ul>
+    </div>
+    <div class="col-md-4">
+      <h4>Rarely Used</h4>
+    <ul class="list-unstyled">
+      <li><input id="on-found" type="checkbox" onchange="napiServer.subscribe()" value=""> <label for="on-found">found</label></li>
+      <li><input id="on-detected" type="checkbox" onchange="napiServer.subscribe()" value=""> <label for="on-detected">detected</label></li>
+    </ul>
+    </div>
+  </div>
   <div class="callout callout-default"><p class="lead">
   If you're running the nymulator, try adding or removing devices, unclasping and reclasping
   </p></div>
-  <div class="callout callout-warning"><p class="lead">all output is in the javascript console, make sure you have it visible</p></div>
-  <div><a class="btn btn-default" href="index.html">Done</a></div>
-  </p>
+  <div>
+    <a class="btn btn-default" href="index.html">Done</a>
+    <button class="btn btn-primary" onclick="napiServer.clearNotifications();">Clear Notifications</button>
+  </div>
+  <table class="table table-condensed">
+    <thead><tr><th>at</th><th>tid</th><th>pid</th><th>notification</th><th>before</th><th>after</th></tr></thead>
+    <tbody id="notifications"></tbody>
+  </table>
+  <div>
+    <a class="btn btn-default" href="index.html">Done</a>
+    <button class="btn btn-primary" onclick="napiServer.clearNotifications();">Clear Notifications</button>
+  </div>
   <script src="watch.js"></script>
 </body>
 </html>
