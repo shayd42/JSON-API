@@ -61,7 +61,7 @@ napiServer.onmessage = function(event){
 
         napiServer.addCell(tr, ts);
         napiServer.addCell(tr, msg.notification[notificationName].tid);
-        napiServer.addCell(tr, msg.notification[notificationName].pid);
+        napiServer.addCodeCell(tr, msg.notification[notificationName].pid);
         napiServer.addCell(tr, notificationName);
         napiServer.addCell(tr, msg.notification[notificationName].before);
         napiServer.addCell(tr, msg.notification[notificationName].after);
@@ -79,6 +79,15 @@ napiServer.addCell = function(tr, txt){
   var td = document.createElement("td")
   var tnode = document.createTextNode(txt)
   td.appendChild(tnode);
+  tr.appendChild(td);
+}
+
+napiServer.addCodeCell = function(tr, txt){
+  var td = document.createElement("td")
+  var code = document.createElement("code")
+  var tnode = document.createTextNode(txt)
+  code.appendChild(tnode);
+  td.appendChild(code);
   tr.appendChild(td);
 }
 

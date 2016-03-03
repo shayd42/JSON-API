@@ -25,8 +25,30 @@ limitations under the License.
 </head>
 <body>
   <h1>Get Info on All Nymi Bands Recently Observed</h1>
-  <div class="callout callout-primary"><p class="lead">It may be easier to inspect this in the javascript console</p></div>
+  <h4>Provisioned Nymi Bands</h4>
+  <table class="table table-condensed">
+    <thead><tr>
+        <th>age</th>
+        <th>tid</th>
+        <th>pid</th>
+        <th>found</th>
+        <th>present</th>
+        <th>proximity</th>
+        <th>approached</th>
+        <th>auth window</th>
+        <th>RSSI</th>
+      </tr></thead>
+    <tbody id="info"></tbody>
+  </table>
+  <div>
+    <a class="btn btn-default" href="index.html">Done</a>
+    <button class="btn btn-primary" onclick="napiServer.getInfo();">Refresh Info</button>
+  </div>
+  <hr/>
+  <h4>Complete JSON Response</h4>
+  <div>
   <textarea id="outcome" rows="30" cols="80"></textarea>
+  </div>
   <div>
     <a class="btn btn-default" href="index.html">Done</a>
     <button class="btn btn-primary" onclick="napiServer.getInfo();">Refresh Info</button>

@@ -41,8 +41,10 @@ napiServer.onmessage = function (event) {
       document.getElementById("pids-title").appendChild(txt);
       for(var i = 0; i < authenticated.length; i++){
         var node = document.createElement("li");
+        var code = document.createElement("code");
         var txt = document.createTextNode(authenticated[i]);
-        node.appendChild(txt);
+        code.appendChild(txt);
+        node.appendChild(code);
         document.getElementById("pids").appendChild(node);
       }
       var txt = document.createTextNode("there are " + msg.nymiband.length +
