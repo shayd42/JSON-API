@@ -14,24 +14,29 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-console.log("pseudo random number sample");
-
 // open a websocket to the napi service
 var napiServer = new WebSocket("wss://127.0.0.1:11000/napi");
 
 napiServer.onopen = function () {
+  napiServer.genRandom();
+}
+
+napiServer.genRandom = function () {
   var req = {
     op: "info",                         // To request info, the op is 'info' and the subop is 'get'
     subop: "get",
     exchange: "exchange-" + Date.now()  // this is a unique value to match a response to a request
   };
 
+  var theSpinner = document.getElementById("the-spinner");
+  theSpinner.className = "glyphicon glyphicon-refresh spinning";
+
   napiServer.send(JSON.stringify(req));
+  napiServer.onmessage = napiServer.requestRandom;
 }
 
-napiServer.onmessage = function (event) {
+napiServer.requestRandom = function (event) {
   var authenticated = JSON.parse(event.data).provisionsPresent;
-  console.log("authenticated or identified provisions:", authenticated);
   var n = authenticated.length;
 
   napiServer.onmessage = napiServer.waitForOutcomes;
@@ -52,16 +57,53 @@ napiServer.waitForOutcomes = function (event) {
   var outcome = JSON.parse(event.data);
 
   if (("random" == outcome.op) && ("run" == outcome.subop)) {
+    var theSpinner = document.getElementById("the-spinner");
+    theSpinner.className = "hidden glyphicon glyphicon-refresh";
     if(outcome.successful){
-      console.log("pseudo random number:", outcome.pseudoRandomNumber, "pid:", outcome.pid)
+      var ts = (new Date()).toISOString();
+      var tr = document.createElement("tr");
+
+      napiServer.addCell(tr, ts);
+      napiServer.addCodeCell(tr, outcome.pid);
+      napiServer.addCodeCell(tr, outcome.pseudoRandomNumber);
+
+      var body = document.getElementById("prns");
+      body.insertBefore(tr, body.childNodes[0]);
     }
     else{
-      console.log("FAILED pseudo random number:", outcome)
+      var ts = (new Date()).toISOString();
+      var tr = document.createElement("tr");
+
+      napiServer.addCell(tr, ts);
+      napiServer.addCodeCell(tr, outcome.pid);
+      napiServer.addCell(tr, "failed");
+
+      var body = document.getElementById("prns");
+      body.insertBefore(tr, body.childNodes[0]);
     }
-  }
-  else {
-    console.log("ignoring message:", outcome);
   }
 }
 
+napiServer.addCell = function(tr, txt){
+  var td = document.createElement("td")
+  var tnode = document.createTextNode(txt)
+  td.appendChild(tnode);
+  tr.appendChild(td);
+}
+
+napiServer.addCodeCell = function(tr, txt){
+  var td = document.createElement("td")
+  var code = document.createElement("code")
+  var tnode = document.createTextNode(txt)
+  code.appendChild(tnode);
+  td.appendChild(code);
+  tr.appendChild(td);
+}
+
+napiServer.clear = function(){
+  var body = document.getElementById("prns");
+  while (body.firstChild) {
+    body.removeChild(body.firstChild);
+  }
+}
 
