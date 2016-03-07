@@ -20,37 +20,39 @@ console.log("buzz (aka notify) sample");
 var napiServer = new WebSocket("wss://127.0.0.1:11000/napi");
 
 napiServer.onopen = function () {
+  napiServer.buzzThem();
+}
+
+napiServer.buzzThem = function () {
   var req = {
     op: "info",                         // To request info, the op is 'info' and the subop is 'get'
     subop: "get",
     exchange: "exchange-" + Date.now()  // this is a unique value to match a response to a request
   };
 
+  var theSpinner = document.getElementById("the-spinner");
+  theSpinner.className = "glyphicon glyphicon-refresh spinning";
+
   napiServer.send(JSON.stringify(req));
+  napiServer.onmessage = napiServer.requestBuzz;
 }
 
-napiServer.onmessage = function (event) {
+napiServer.requestBuzz = function (event) {
   var authenticated = JSON.parse(event.data).provisionsPresent;
-  if(authenticated === undefined){
-    console.log("There are no authenticated or identified provisions.");
-  }
-  else{
-    console.log("authenticated or identified provisions:", authenticated);
-    var n = authenticated.length;
+  var n = authenticated.length;
 
-    napiServer.onmessage = napiServer.waitForOutcomes;
+  napiServer.onmessage = napiServer.waitForOutcomes;
 
-    for (var i = 0; i < n; i++) {
-      var req = {
-        op: "notify",
-        subop: "run",
-        exchange: "exchange-sign-" + authenticated[i] + "-" + Date.now(),
-        pid: authenticated[i],
-        notification: (i % 2) ? "positive" : "negative" // can be true and false as well
-      }
-      napiServer.send(JSON.stringify(req));
-      console.log(i, "notifying:", authenticated[i], req.notification)
+  for (var i = 0; i < n; i++) {
+    var req = {
+      op: "notify",
+      subop: "run",
+      exchange: "exchange-sign-" + authenticated[i] + "-" + Date.now(),
+      pid: authenticated[i],
+      //notification: (i % 2) ? "positive" : "negative" // can be true and false as well
+      notification: (0.5 < Math.random()) ? "positive" : "negative" // can be true and false as well
     }
+    napiServer.send(JSON.stringify(req));
   }
 }
 
@@ -58,11 +60,32 @@ napiServer.waitForOutcomes = function (event) {
   var outcome = JSON.parse(event.data);
 
   if (("notify" == outcome.op) && ("run" == outcome.subop)) {
+    var theSpinner = document.getElementById("the-spinner");
+    theSpinner.className = "hidden glyphicon glyphicon-refresh";
+
     if(outcome.successful){
       console.log("pid:", outcome.pid, "received a", outcome.notification, "notification")
+      var ts = (new Date()).toISOString();
+      var tr = document.createElement("tr");
+
+      napiServer.addCell(tr, ts);
+      napiServer.addCodeCell(tr, outcome.pid);
+      napiServer.addCell(tr, outcome.notification);
+
+      var body = document.getElementById("buzz");
+      body.insertBefore(tr, body.childNodes[0]);
     }
     else{
       console.log("FAILED notification:", outcome)
+      var ts = (new Date()).toISOString();
+      var tr = document.createElement("tr");
+
+      napiServer.addCell(tr, ts);
+      napiServer.addCodeCell(tr, outcome.pid);
+      napiServer.addCell(tr, "failed");
+
+      var body = document.getElementById("buzz");
+      body.insertBefore(tr, body.childNodes[0]);
     }
   }
   else {
@@ -70,4 +93,26 @@ napiServer.waitForOutcomes = function (event) {
   }
 }
 
+napiServer.addCell = function(tr, txt){
+  var td = document.createElement("td")
+  var tnode = document.createTextNode(txt)
+  td.appendChild(tnode);
+  tr.appendChild(td);
+}
+
+napiServer.addCodeCell = function(tr, txt){
+  var td = document.createElement("td")
+  var code = document.createElement("code")
+  var tnode = document.createTextNode(txt)
+  code.appendChild(tnode);
+  td.appendChild(code);
+  tr.appendChild(td);
+}
+
+napiServer.clear = function(){
+  var body = document.getElementById("prns");
+  while (body.firstChild) {
+    body.removeChild(body.firstChild);
+  }
+}
 

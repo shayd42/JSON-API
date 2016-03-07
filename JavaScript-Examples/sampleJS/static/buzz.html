@@ -25,8 +25,16 @@ limitations under the License.
 </head>
 <body>
   <h1>Buzz each nymiband in the vicinity</h1>
-  <div class="callout callout-warning"><p class="lead">all output is in the javascript console, make sure you have it visible</p></div>
-  <div><a class="btn btn-default" href="index.html">Done</a></div>
+  <table class="table table-condensed">
+    <thead><tr><th>at</th><th>pid</th><th>buzz</th></tr></thead>
+    <tbody id="buzz"></tbody>
+  </table>
+  <div>
+    <a class="btn btn-default" href="index.html">Done</a>
+    <button id="the-button" class="btn btn-primary has-spinner" style="width:100px" onclick="napiServer.buzzThem();">
+      Buzz Again<span id="the-spinner" class="hidden glyphicon glyphicon-refresh"></span>
+    </button>
+  </div>
   <script src="buzz.js"></script>
 </body>
 </html>
