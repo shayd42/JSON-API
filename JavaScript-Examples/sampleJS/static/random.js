@@ -55,6 +55,7 @@ napiServer.requestRandom = function (event) {
 
 napiServer.waitForOutcomes = function (event) {
   var outcome = JSON.parse(event.data);
+  console.log("outcome", outcome);
 
   if (("random" == outcome.op) && ("run" == outcome.subop)) {
     var theSpinner = document.getElementById("the-spinner");
@@ -76,7 +77,7 @@ napiServer.waitForOutcomes = function (event) {
 
       napiServer.addCell(tr, ts);
       napiServer.addCodeCell(tr, outcome.pid);
-      napiServer.addCell(tr, "failed");
+      napiServer.addCell(tr, outcome.outcome);
 
       var body = document.getElementById("prns");
       body.insertBefore(tr, body.childNodes[0]);
