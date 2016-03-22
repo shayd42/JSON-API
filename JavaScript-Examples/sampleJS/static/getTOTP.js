@@ -50,6 +50,7 @@ napiServer.onmessage = function (event) {
 
 napiServer.waitForOutcomes = function (event) {
   var outcome = JSON.parse(event.data);
+  console.log("outcome", outcome);
 
   if (("getTOTP" == outcome.op) && ("run" == outcome.subop)) {
     console.log("pid:", outcome.pid,"TOTP:", outcome.TOTP)

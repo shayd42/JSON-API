@@ -56,6 +56,7 @@ napiServer.onmessage = function (event) {
 
 napiServer.waitForOutcomes = function (event) {
   var outcome = JSON.parse(event.data);
+  console.log("outcome", outcome);
 
   if (("sign" == outcome.op) && ("run" == outcome.subop)) {
     if(outcome.successful){

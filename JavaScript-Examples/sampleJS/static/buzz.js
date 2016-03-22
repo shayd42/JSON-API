@@ -82,7 +82,7 @@ napiServer.waitForOutcomes = function (event) {
 
       napiServer.addCell(tr, ts);
       napiServer.addCodeCell(tr, outcome.pid);
-      napiServer.addCell(tr, "failed");
+      napiServer.addCell(tr, outcome.outcome);
 
       var body = document.getElementById("buzz");
       body.insertBefore(tr, body.childNodes[0]);

@@ -48,13 +48,13 @@ napiServer.onmessage = function (event) {
     }
     napiServer.send(JSON.stringify(req));
     console.log(i, "create TOTP for:", authenticated[i], "key:", key)
-
   }
-
 }
 
 napiServer.waitForOutcomes = function (event) {
   var outcome = JSON.parse(event.data);
+
+  console.log("outcome", outcome);
 
   if (("createTOTP" == outcome.op) && ("run" == outcome.subop)) {
     console.log("pid:", outcome.pid,"TOTPId:", outcome.TOTPId)
