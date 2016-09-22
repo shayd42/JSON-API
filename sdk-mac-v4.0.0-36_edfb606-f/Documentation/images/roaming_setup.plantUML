@@ -1,0 +1,22 @@
+@startuml
+autonumber "<b> [000]"
+actor "Nymi Band" as Nymi #red
+participant "Relying Party NEA" as NEA
+participant "Relying Party Server" as Server
+
+title Roaming Authenticator Setup
+
+== Provision ==
+Server -> Server: Generate relying party (RP) <public,private> key pair
+Server -> NEA: RP public key
+Nymi   <-> NEA: Provision the Nymi Band (NB)
+
+== Signature Key Pair Exchange ==
+NEA -> Nymi: Request NB's public key \n Input: RP public key
+Nymi -> Nymi: Generate <public,private> key pair
+Nymi -> Nymi: Associate RP public key with NB public key
+Nymi -> NEA: NB public key, NB public key ID
+NEA -> Server: NB public key, NB public key ID
+Server -> Server: Associate NB public key ID with user profile
+
+@enduml

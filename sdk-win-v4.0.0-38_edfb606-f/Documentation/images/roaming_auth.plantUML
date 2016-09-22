@@ -1,0 +1,25 @@
+@startuml
+autonumber "<b> [000]"
+actor "Nymi Band" as Nymi #red
+participant "Relying Party Terminal" as Terminal
+participant "Relying Party Server" as Server
+
+title Nymi Band as a Roaming Authenticator
+
+== Roaming Authentication ==
+Terminal -> Terminal: Start Nymi Band detection
+Nymi -> Terminal: Advertising nonce (16 byte)
+Terminal -> Server: Advertising nonce
+Server -> Server: Sign (ECDSA with NIST256p) the SHA256 hash of \n(advertising nonce (16 byte) + server nonce (32 byte)) \nwith RP private key
+Server -> Terminal: Server nonce, RP public key, \nserver signature from [004]
+Terminal -> Nymi: Advertising nonce, server nonce, \nRP public key, server signature
+Nymi -> Nymi: Verification of signature using RP public key
+Nymi -> Nymi: Sign server nonce with Nymi Band (NB) private key\n Output: SIG
+Nymi -> Terminal: SIG, NB public key ID
+Terminal -> Server: SIG, NB public key ID
+Server -> Server: Locate NB public key by ID
+Server -> Server: Verify SIG using NB public key
+Server -> Server: Retrieve profile associated with NB public key ID
+Server -> Terminal: Do something
+
+@enduml

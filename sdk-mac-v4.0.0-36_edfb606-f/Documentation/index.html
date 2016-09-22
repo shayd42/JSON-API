@@ -1,0 +1,1631 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Nymi SDK Documentation</title>
+
+    <link href="stylesheets/screen.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" type="text/css" media="print" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+      <script src="javascripts/all.js" type="text/javascript"></script>
+
+  </head>
+
+  <body class="index">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar.png" />
+      </span>
+    </a>
+    <div class="tocify-wrapper">
+      <img src="images/nymidev.png" />
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+      <div id="toc">
+      </div>
+        <ul class="toc-footer">
+            <li><a href='http://forums.nymi.com/'>Forums</a></li>
+            <li><a href='http://www.nymi.com/dev/'>Developer Home</a></li>
+            <li><a href='./jsonreference/index.html'>Nymi JSON API Reference</a></li>
+            <li><p>v4.0.0.944</p></li>
+        </ul>
+    </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+      <div class="content">
+        
+
+          <h1 id="introduction">Introduction</h1>
+
+<h2 id="welcome-to-the-nymi-sdk-40">Welcome to the Nymi SDK 4.0</h2>
+
+<p>This version of the Nymi™ SDK introduces a revised API that runs as an in-process C/C++ based static library, and targets robustness and speed of Nymi-enabled Application (NEA) development.</p>
+
+<p>The SDK enables exciting possibilities for development of applications using the innovative Nymi Band™. The Nymi Band implements secure, persistent authentication and allows application developers to authenticate users conveniently and seamlessly, without the need for passwords or repeated interruptions to the user. The authentication capability travels with the user in the Nymi Band wearable form factor, which enables the user to biometrically authenticate once with the Nymi Band and then interact securely with their digital and physical assets.</p>
+
+<p>Here are just a few examples of ways to integrate Nymi authentication:</p>
+
+<ul>
+  <li>Unlocking computers without a password</li>
+  <li>Physical Access - unlocking doors without a card or fob key</li>
+  <li>Web service account authentication</li>
+  <li>Second factor (2FA) digital access</li>
+  <li>Public terminal authentication for registered users (for example, airports, hotels, or hospitals)</li>
+</ul>
+
+<p>In all cases, the privacy of the end user is our primary consideration. The end user must give explicit permission for entities to interact with their Nymi Band.</p>
+
+<h2 id="new-in-sdk-40">New in SDK 4.0</h2>
+
+<p>In SDK 4.0, the Nymi JSON API now runs as an in-process C/C++ based static library, instead of as a websocket server as in SDK 3.1. The JSON protocol has also changed. For details, see the <a href="./jsonreference/index.html">Nymi JSON API Reference</a> documentation. <br />
+This version of the SDK targets Nymi firmware version 1.9.7. and later.</p>
+
+<p>NEAs written with SDK 3.1 must be updated to account for the new in-process library and the JSON API protocol changes.</p>
+
+<p>SDK 4.0 also includes support for a new Bluetooth® advertisement protocol that enhances performance and the reliability of communication with the Nymi Band.</p>
+
+<h2 id="starting-points">Starting Points</h2>
+<ul>
+  <li>
+    <p>For an overview of the new SDK and the NapiCppWrapper sample app provided by Nymi, see the <a href="#developer-quick-start">Developer Quick Start</a> and NapiCppWrapper <a href="#sample-app-walkthrough">Sample App Walkthrough</a> sections.</p>
+  </li>
+  <li>
+    <p>For a deeper look into the fundamentals of developing NEAs with SDK 4.0, see the <a href="#nymi-api-concepts">API Concepts</a> section.</p>
+  </li>
+  <li>
+    <p>For background information on the Nymi Band itself, see the <a href="#the-nymi-band">The Nymi Band</a> section of the <a href="#the-nymi-ecosystem">Nymi Ecosystem</a>.</p>
+  </li>
+</ul>
+
+<h2 id="questions-comments">Questions? Comments?</h2>
+
+<p>Contact Nymi’s developer relations team on the <a href="http://forums.nymi.com/">Nymi Developer Forum</a>.</p>
+
+<p>For answers to common questions, see the <a href="http://nymi.zendesk.com/hc/en-us">FAQ</a>.</p>
+
+
+          <h1 id="the-nymi-ecosystem">The Nymi Ecosystem</h1>
+
+<p>The Nymi Band is an <em>authenticator</em> that interacts with various apps, devices, and identity systems. The collection of these apps, devices, identity systems, and Nymi Bands make up the Nymi Ecosystem.</p>
+
+<p>Nymi Bands communicate with the Nymi Ecosystem through Bluetooth<sup>®</sup> Low Energy wireless technology. At a high level, there are two types of apps in the ecosystem:</p>
+
+<ol>
+  <li>The <a href="#nymi-band-app">Nymi Band application</a> is a mobile app provided by Nymi. There must be a one-to-one pairing between Nymi Band and app. The Nymi Band app does the following:
+    <ul>
+      <li>Establishes the one-to-one pairing with a Nymi Band through a one-time <a href="#setup">setup</a> process</li>
+      <li>Manages your alternate authentication options (for example, Touch ID or password)</li>
+      <li>Administers the Nymi Band (for example, firmware updates)</li>
+    </ul>
+  </li>
+  <li>A <a href="#nymi-enabled-apps">Nymi-enabled Application</a> (NEA) is an application (app) that Nymi or the developer community writes, using the Nymi SDK and JSON API. An NEA uses the authentication and/or security functionality provided by an authenticated Nymi Band.</li>
+</ol>
+
+<p><strong>Note:</strong> The Nymi Band does not use traditional Bluetooth pairing for communication. The Nymi Band app manages the connection with the Nymi Band, using encryption that is independent of the Bluetooth protocol.</p>
+
+<p>The following diagrams characterize the Nymi Band’s interactions with its paired Nymi Band app, and with the ecosystem of NEAs. It highlights the sequential steps required to use the Nymi Band as an authenticator, beginning with the setup of an out-of-the-box Nymi Band.</p>
+
+<h3 id="setup">Setup</h3>
+
+<p><em>Use the Nymi Band app (available on Google Play™ or the App Store®) to set up your Nymi Band and create an associated biometric profile. Setup requires a Bluetooth<sup>®</sup> Low Energy wireless connection between your Nymi Band and the Nymi Band app. Profile creation is typically a one-time process in the lifetime of the Nymi Band. However, if you reset the band, you must create a new profile.</em></p>
+
+<p><img alt="Nymi Band app Setup" src="images/NCAEnrollment.png" /></p>
+
+<h3 id="authentication">Authentication</h3>
+
+<p><em>A Nymi Band is authenticated by HeartID on the Nymi Band itself, or by Touch ID or other secure mechanism through the Nymi Band app. Authentication is typically done once a day, and persists until you unclasp the band.</em></p>
+
+<p><img alt="NCA Authentication" src="images/NCAAuthentication.png" /></p>
+
+<h3 id="nea-communication">NEA Communication</h3>
+
+<p><em>An NEA communicates with an authenticated Nymi Band through the Nymi JSON API and Bluetooth<sup>®</sup> wireless technology. The Nymi Band must explicitly grant an NEA permission to connect to it. This is done through the <a href="#provisioning">provisioning</a> process.</em></p>
+
+<p><img alt="NEA Ecosystem" src="images/NEAEcosystem.png" /></p>
+
+<h2 id="the-nymi-band">The Nymi Band</h2>
+
+<p>The Nymi Band enables <strong>secure</strong>, <strong>persistent authentication</strong> in the form of a wearable, multi-factor 
+biometric solution.</p>
+
+<h3 id="persistent-authentication">Persistent Authentication</h3>
+
+<p>Users are typically authenticated to a system by the discrete act of presenting <em>some</em> token, to gain some access or privilege. Examples include entering an account password for a web service, or entering a PIN at an ATM. This type of authentication loses trust over time. For example, many people opt to stay logged into their email to avoid repeatedly typing their password. Here, the confidence that an individual currently using a service is the same individual that authenticated the access decreases as the time since authentication increases. There is a trade-off between security and convenience.</p>
+
+<p>The Nymi Band presents an elegant solution that does not compromise security for convenience. Instead of requiring the user to remember unique and complex passwords to various parties, the user authenticates the Nymi Band, which then relays the user’s authentication status to all subscribing parties. With the Nymi Band acting as the authenticator on behalf of the user, we can now use cryptographic forms of authentication that provide security well above passwords and PINs. Furthermore, confidence in the Nymi Band’s state of authentication is not a function of time thanks to the on-body persistence of the Nymi Band’s authenticated state: the user authenticates the band when it is on their wrist, and when the band comes off the user’s wrist, the Nymi Band transitions to an unauthenticated state, becoming invisible to all parties. This allows an NEA to persistently authenticate a user’s presence without additional effort by the user, opening a world of possibilities to enhance both security and convenience.</p>
+
+<p>The Nymi Band may also be easily integrated into multi-factor authentication systems.</p>
+
+<p>The following diagrams illustrate how the Nymi Band changes the traditional password-based authentication space. A relying party is any entity that requires user authentication.</p>
+
+<p><em>Password-based solution does not scale well with the increase of relying parties and increase of security requirements for passwords.</em></p>
+
+<p><img alt="Password Authentication" src="images/auth.png" /></p>
+
+<p><em>Nymi solution provides increased security and greater simplicity.</em></p>
+
+<p><img alt="Nymi Authentication" src="images/nymi_auth.png" /></p>
+
+<h3 id="anatomy-of-the-nymi-band">Anatomy of the Nymi Band.</h3>
+
+<p><img alt="Nymi Band Anatomy" src="images/NymiBandAnatomy2.png" /></p>
+
+<h3 id="heartid---ecg-as-a-biometric">HeartID - ECG as a Biometric</h3>
+
+<p>HeartID™ is the unique biometric authentication algorithm developed by Nymi that uses the electrocardiogram (ECG) of a user as a biometric identifier. An ECG signal is the electrical signal generated by an individual’s heart. The user’s ECG is read through the two electrodes on the Nymi Band, and analyzed by HeartID. HeartID uses machine learning algorithms to extract features relating to the <em>shape</em> of the ECG signal. These algorithms are invariant to the <em>heart rate</em>. That means the HeartID algorithm is not affected by going for a run, or enjoying a cup of coffee. The HeartID algorithm is currently integrated into the Nymi Band itself, and enables on-band user authentication.</p>
+
+<aside class="notice">The Nymi Band is NOT certified as a medical device, and the ECG signal should not be used for medical purposes. The Nymi JSON API does not expose or enable streaming of a user's ECG data.
+</aside>
+
+<p>Why use ECG as a biometric? One of the earliest biometrics used was fingerprints because they are universal, unique, permanent, and easy to capture. More recently, facial recognition has become common for applications ranging from access control to surveillance. Fingerprints and facial features are categorized as <em>extrinsic</em> biometric identifiers, and they can often be captured without an individual’s consent (known as skimming). ECG, on the other hand, is an <em>intrinsic</em> biometric identifier, and is not susceptible to skimming attacks without an individual’s cooperation. Capturing ECG data requires direct or very close contact with the user, making it suitable for secure, user-controlled biometric recognition systems. Unlike fingerprints, latent samples are not left behind on contact surfaces. Additionally, ECG can be captured through techniques that are seamless and convenient to the user.</p>
+
+<h2 id="nymi-band-app">Nymi Band App</h2>
+
+<p>The Nymi Band app is a mobile application that helps you set up and manage your Nymi Band profile. It is available for Android on Google Play™ and for iOS on the App Store®. To create your profile with the Nymi Band app, follow the instructions in the app. The setup process involves capturing approximately one minute of heartbeat data with the Nymi Band, as well as creating a secondary method of authentication (for example, fingerprint recognition, or a password).</p>
+
+<p><em>The setup process in the Nymi Band app</em></p>
+
+<p><img alt="The Android Nymi Band app" src="images/nca_android1.png" />     <img alt="The Android Nymi Band app2" src="images/nca_android2.png" /></p>
+
+<p>After setup is complete, the Nymi Band app is used for managing profile settings, fitness tracking data, and alternate authentication methods, enhancing your biometric profile with more heartbeat data, and managing your <a href="#provisioning">provisions</a> to NEAs.</p>
+
+<h2 id="nymi-enabled-apps">Nymi-enabled Apps</h2>
+
+<p>Nymi-enabled Applications (NEAs) are applications that use the Nymi Band’s authentication and security capabilities. An NEA communicates only with authenticated Nymi Bands. NEAs are written and managed by <em>relying parties</em> (RP). A relying party is defined as an entity, with a physical or web presence, that uses the Nymi Band to authenticate its users.</p>
+
+<p>NEAs can run on any machine that is Bluetooth<sup>®</sup> compliant and runs a <a href="#supported-platforms">supported platform</a>. See the <a href="#nymi-api-concepts">Nymi API Concepts</a> section to learn about the technical specifications of an NEA and how it can interact with the Nymi JSON API.</p>
+
+<p>Here are some examples of what an NEA could do:</p>
+
+<ul>
+  <li>General authentication</li>
+  <li>File encryption</li>
+  <li>Password vault</li>
+  <li>SSH integration</li>
+  <li>Smart spaces</li>
+</ul>
+
+
+          <h1 id="developer-quick-start">Developer Quick Start</h1>
+
+<p>Use Nymi’s free SDK to develop Nymi-enabled applications (NEAs) for use with the Nymi Band. The SDK includes the Nymi JSON API, and the Nymulator (Nymi Band Simulator) to test your code without the need for a physical Nymi Band.</p>
+
+<p>The Nymi JSON API 4.0 runs as an in-process static library. To demonstrate the functionality exposed through the JSON API, we have provided a sample application (NapiCppWrapper). The sample app is an NEA written in C++, over a wrapper layer that provides a C++ interface to the JSON API.</p>
+
+<p>The NapiCppWrapper sample app demonstrates how to provision a Nymi Band, how to obtain the authentication status of the Nymi Band, and how to obtain cryptographic assets from a provisioned Nymi Band.</p>
+
+<p>This Developer Quick Start walks you through the installation of the sample app, the initialization of the JSON API, and the provisioning process. From there, you can follow the NapiCppWrapper <a href="#sample-app-walkthrough">Sample App Walkthrough</a> to explore the other functions.</p>
+
+<h3 id="supported-platforms">Supported Platforms</h3>
+
+<p>SDK 4.0 currently supports the following platforms:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>OS</th>
+      <th>Supported Versions</th>
+      <th>Required Hardware</th>
+      <th>Recommended Developer Tools</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="#developing-on-os-x-platforms">Apple Mac OS</a></td>
+      <td>OS X Yosemite (10.10)</td>
+      <td>Bluetooth<sup>®</sup> Low Energy 4.0</td>
+      <td>Xcode 7.2.1</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>OS X El Capitan (10.11)</td>
+      <td>Bluetooth<sup>®</sup> Smart Ready</td>
+      <td> </td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td><a href="#developing-on-windows-platforms">Microsoft Windows</a></td>
+      <td>Windows 10, 8.1, 7</td>
+      <td>BLED112 Bluetooth Smart Adapter</td>
+      <td>Visual Studio 2015</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>64 bit only</td>
+      <td>(required for, and included with, the Nymi Band)</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="contents-of-the-sdk-package">Contents of the SDK Package</h3>
+
+<p>The Nymi SDK package structure is as follows:</p>
+
+<ul>
+  <li>(sdk4.0) .zip/.tar
+    <ul>
+      <li>API</li>
+      <li>Documentation</li>
+      <li>NymiBluetoothService (Windows OS only)</li>
+      <li>Nymulator</li>
+      <li>LICENSE.txt</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="development-with-the-nymulator">Development with the Nymulator</h3>
+
+<p>You do not need a physical Nymi Band for NEA development. You can start developing immediately with the <a href="#using-the-nymulator">Nymulator</a>, which simulates up to six Nymi Bands in a software environment.</p>
+
+<p>The Nymulator is <a href="#supported-platforms">supported</a> on the same OS X and Windows OS versions as the SDK.</p>
+
+<aside class="notice">
+This Quick Start describes how to get started with the Nymi JSON API and the Nymulator. We recommend following this process before working with a physical Nymi Band. 
+</aside>
+
+<p>The <a href="#development-with-a-nymi-band">Development with a Nymi Band</a> section describes the configuration changes required for running the JSON API and the NapiCppWrapper sample app against a physical Nymi Band.</p>
+
+<h2 id="developing-on-windows-platforms">Developing on Windows Platforms</h2>
+
+<ol>
+  <li>Download the SDK zip. The link below is a direct download. All files are available on GitHub®.
+    <ul>
+      <li><a href="http://github.com/Nymi/JSON-API/releases/">Windows SDK</a>
+<br /><br /></li>
+    </ul>
+  </li>
+  <li>Extract the contents of the zip. <br />
+Note: For this Quick Start guide, the example directory <code>sdk4.0</code> represents the top level directory of the extracted SDK files.
+<br /><br /></li>
+  <li>The Nymulator requires the Visual Studio Redistributable 2013 x86, which is included in: <code>sdk4.0\Nymulator\vcredist_x86.exe</code>. <br />
+ If you do not already have the redistributable package installed, run <code>vcredist_x86.exe</code>.
+<br /><br /></li>
+  <li>Clone or fork NapiCppWrapper from the Nymi/SampleApps GitHub repository. The link below opens in a new tab.
+    <ul>
+      <li><a href="http://github.com/Nymi/SampleApps">NapiCppWrapper sample app</a>
+<br /><br /></li>
+    </ul>
+  </li>
+  <li>Copy the API files from <code>sdk4.0\API\</code> into the dependencies directory of the sample app: <code>NapiCppWrapper\deps\</code>.
+    <ul>
+      <li><code>API\json-napi.h</code> is always required</li>
+      <li><code>API\napi-net.lib</code> is always required<br />
+ <strong>Note:</strong> The Nymi SDK supports only 64 bit Windows platforms.
+<br /><br /></li>
+    </ul>
+  </li>
+  <li>Start the Nymulator. The Nymulator must be running before you start NapiCppWrapper, otherwise the JSON API cannot be properly initalized.
+    <ol>
+      <li>Double-click the executable: <code>sdk4.0\Nymulator\Nymulator.exe</code>.</li>
+      <li>Make a note of the port number that the Nymulator is using. By default this is port 9088. If this port is in use by another process, the Nymulator decrements the number and tries again until it finds an open port. 
+<br /><br /></li>
+    </ol>
+  </li>
+  <li>Open NapiCppWrapper and set the port number.
+    <ol>
+      <li>Open the <code>NapiCpp.sln</code> solution in Visual Studio 2015.</li>
+      <li>Open <code>main.cpp</code>.</li>
+      <li>Set <code>nPort</code> to the Nymulator port.
+<br /><br /></li>
+    </ol>
+  </li>
+  <li>Start the Nymi JSON API and connect to the Nymulator.
+    <ol>
+      <li>Build <code>NapiCpp</code>.</li>
+      <li>In Windows Explorer, copy the <code>config.json</code> file from <code>NapiCppWrapper\win-vs-2015\NapiCpp\NapiCpp\</code> to the directory containing the NapiCpp executable that you just built (for example: <code>NapiCpp\x64\Release\</code>).</li>
+      <li>
+        <p>Run <code>NapiCpp</code>. 
+ <br />
+ A command window opens and displays the following message:</p>
+
+        <p><code>NymiApi initialization succeeded</code><br />
+ <code>received message: {"completed":true,"exchange":"*provisioning*","operation":["provision","run","start"],"path":"provision/run/start","response":{},"successful":true}</code><br />
+ <code>Provisioning mode is now start</code></p>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <p>In the Nymulator, click <strong>Add</strong> to create a virtual Nymi Band. When they are created, virtual Nymi Bands are authenticated, but not provisioned.</p>
+  </li>
+  <li>
+    <p>Provision the Nymi Band. Provisioning is a one-time process that establishes a trusted relationship between the Nymi Band and a specific NEA running on a specific device. The Nymi Band initiates the process by generating a pattern that appears on the Nymi Band’s LEDs. This pattern is also computed independently by the JSON API and sent to the NEA. The user wearing the Nymi Band must confirm that the patterns match.</p>
+
+    <p>The pattern appears on the Nymi Band graphic in the upper-right corner of the Nymulator. At the same time, the pattern also appears in the command window, where a plus sign (+) indicates an LED is ON, and a minus sign (-) indicates an LED is OFF. If the two patterns match, you accept the pattern as described in this procedure.</p>
+
+    <ol>
+      <li>In the Nymulator, click <strong>Begin Provisioning</strong>. A pattern appears on the Nymi Band graphic.</li>
+      <li>In the command window, the following message appears:<br />
+ <code>Pattern(s) discovered:</code>, followed by a series of 5 plus and/or minus signs<br /></li>
+      <li>Confirm that the pattern in the command window matches the one displayed in the Nymulator.</li>
+      <li>Type <code>accept</code> followed by the plus/minus sign pattern that was discovered. <br />
+Note that there must be a space between <code>accept</code> and the pattern.</li>
+    </ol>
+  </li>
+</ol>
+
+<p>For example:<br /></p>
+
+<p>In the Nymulator, you see: <img alt="Pattern in a Nymulator" src="images/nymi_band0-pattern.png" /><br />
+In the command window, you see: <code>Pattern(s) discovered: -+-+-</code> <br />
+<code>Confirm the pattern on your Nymi Band by the accept command. Example: enter accept -+--+</code><br />
+You type: <code>accept -+-+-</code> <br /></p>
+
+<p>Success messages appear in the command window, and in the Nymulator Activity Log.</p>
+
+<p><strong>Note:</strong> An NEA must have explicit user agreement to provision a Nymi Band. An NEA must provide some way for the user to confirm the LED pattern displayed on their Nymi Band. The NEA can either: display the pattern to the user, and ask for confirmation that the displayed pattern matches that on the band, or ask the user to input the pattern on their band, and proceed if it matches the pattern sent to the NEA by the JSON API. The first approach is more convenient for the user, while the second provides greater certainty.</p>
+
+<aside class="success">
+Congratulations! You have successfully provisioned a virtual Nymi Band. 
+</aside>
+<p>Now that the Nymi Band is provisioned, you can verify its authentication status, generate and obtain cryptographic assests, and more. These features are described in the <a href="#sample-app-walkthrough">NapiCppWrapper Sample App Walkthrough</a> section.</p>
+
+<p>To start working with a physical Nymi Band, see the <a href="#development-with-a-nymi-band">Development with a Nymi Band</a> section, which describes the configuration changes required for running the JSON API and NapiCppWrapper against a physical Nymi Band.</p>
+
+<h2 id="developing-on-os-x-platforms">Developing on OS X Platforms</h2>
+
+<ol>
+  <li>Download the SDK. The link below is a direct download. All files are available on GitHub.
+    <ul>
+      <li><a href="https://github.com/Nymi/JSON-API/releases/">OS X SDK</a>
+<br /><br /></li>
+    </ul>
+  </li>
+  <li>Extract all the files in the tar.<br />
+Note: For this Quick Start guide, the example directory <code>sdk4.0</code> represents the top level directory of the extracted SDK files.
+<br /><br /></li>
+  <li>Clone or fork NapiCppWrapper from the Nymi/SampleApps GitHub repository. The link below opens in a new tab.
+    <ul>
+      <li><a href="https://github.com/Nymi/SampleApps">NapiCppWrapper sample app</a>
+<br /><br /></li>
+    </ul>
+  </li>
+  <li>Copy the API files from <code>sdk4.0\API\</code> into the dependencies directory of the sample app: <code>NapiCppWrapper\deps\</code>.
+    <ul>
+      <li><code>API\json-napi.h</code> is always required</li>
+      <li><code>API\libnapi-net.a</code> is required for developing against a Nymulator</li>
+      <li><code>API\libnapi.a</code> is required for developing against a Nymi Band. It is not used in this Quick Start. See <a href="#development-with-a-nymi-band">Development with a Nymi Band</a> for more information.
+<br /><br /></li>
+    </ul>
+  </li>
+  <li>Start the Nymulator. The Nymulator must be running before you start NapiCppWrapper, otherwise the JSON API cannot be properly initalized.
+    <ol>
+      <li>Mount the Nyumlator .dmg file (found in the <code>sdk4.0\Nymulator\</code> directory).</li>
+      <li>Double-click the Nymulator executable.</li>
+      <li>Make a note of the port number that the Nymulator is using. By default this is port 9088. If this port is in use by another process, the Nymulator decrements the number and tries again until it finds an open port. 
+<br /><br /></li>
+    </ol>
+  </li>
+  <li>Open NapiCppWrapper and set the port number.
+    <ol>
+      <li>Open the <code>NapiCpp.xcodeproj</code> in Xcode®.</li>
+      <li>Open <code>main.cpp</code>.</li>
+      <li>Set <code>nPort</code> to the Nymulator port.
+<br /><br /></li>
+    </ol>
+  </li>
+  <li>Set the OSX Deployment Target for your system.
+    <ol>
+      <li>In Xcode, click the solution name.</li>
+      <li>Click the NapiCpp target.</li>
+      <li>Click <strong>Build Settings</strong>.</li>
+      <li>Expand the <strong>Deployment</strong> section and locate the <strong>OS X Deployment Target</strong> setting.</li>
+      <li>Change the NapiCpp target version to match the OS X version of your system. 
+<br /><br /></li>
+    </ol>
+  </li>
+  <li>Start the Nymi JSON API and connect to the Nymulator.
+    <ol>
+      <li>Build <code>NapiCpp</code>.</li>
+      <li>In Finder, copy the <code>config.json</code> file from <code>NapiCppWrapper\osx\NapiCpp\NapiCpp\</code> to the directory containing the NapiCpp executable that you just built. <br />
+ To find the executable, in the Project Navigator, under Products, select <code>NapiCpp</code>. On the toolbar, click <strong>File &gt; Show in Finder</strong>.</li>
+      <li>
+        <p>In Xcode, run <code>NapiCpp</code>. 
+ <br />
+ The Xcode console displays the following message:</p>
+
+        <p><code>NymiApi initialization succeeded</code><br />
+ <code>received message: {"completed":true,"exchange":"*provisioning*","operation":["provision","run","start"],"path":"provision/run/start","response":{},"successful":true}</code><br />
+ <code>Provisioning mode is now start</code></p>
+      </li>
+    </ol>
+  </li>
+  <li>In the Nymulator, click <strong>Add</strong> to create a virtual Nymi Band. When they are created, virtual Nymi Bands are authenticated, but not provisioned. 
+<br /><br /></li>
+  <li>
+    <p>Provision the Nymi Band. Provisioning is a one-time process that establishes a trusted relationship between the Nymi Band and a specific NEA running on a specific device. The Nymi Band initiates the process by generating a pattern that appears on the band’s LEDs. This pattern is also computed independently by the JSON API, and sent to the NEA. The user wearing the Nymi Band must confirm that the patterns match.</p>
+
+    <p>The pattern appears on the Nymi Band graphic in the upper right corner of the Nymulator. At the same time, the pattern also appears in the console, where a plus sign (+) indicates an LED is ON, and a minus sign (-) indicates an LED is OFF. If the two patterns match, you accept the pattern as described in this procedure.</p>
+
+    <ol>
+      <li>In the Nymulator, click <strong>Begin Provisioning</strong>. A pattern appears on the Nymi Band graphic.</li>
+      <li>In the Xcode console, the following message appears:<br />
+ <code>Pattern(s) discovered:</code>, followed by a series of 5 plus and/or minus signs<br /></li>
+      <li>Confirm that the pattern in the console matches the one displayed in the Nymulator.</li>
+      <li>In the console, type <code>accept</code> followed by the plus/minus sign pattern that was discovered. <br />
+Note that there must be a space between <code>accept</code> and the pattern.</li>
+    </ol>
+  </li>
+</ol>
+
+<p>For example:<br /></p>
+
+<p>In the Nymulator, you see: <img alt="Pattern in a Nymulator" src="images/nymi_band0-pattern.png" /><br />
+In the console, you see: <code>Pattern(s) discovered: -+-+-</code> <br />
+You type: <code>accept -+-+-</code> <br /></p>
+
+<p>Success messages appear in the console, and in the Nymulator Activity Log.</p>
+
+<p><strong>Note:</strong> An NEA must have explicit user agreement to provision a Nymi Band. An NEA must provide some way for the user to confirm the LED pattern displayed on their Nymi Band. The NEA can either: display the pattern to the user, and ask for confirmation that the displayed pattern matches that on the band, or ask the user to input the pattern on their band, and proceed if it matches the pattern sent to the NEA by the JSON API. The first approach is more convenient for the user, while the second provides greater certainty.</p>
+
+<aside class="success">
+Congratulations! You have successfully provisioned a virtual Nymi Band.
+</aside>
+<p>Now that the Nymi Band is provisioned, you can verify its authentication status, generate and obtain cryptographic assests, and more. These features are described in the <a href="#sample-app-walkthrough">NapiCppWrapper Sample App Walkthrough</a> section.</p>
+
+<p>To start working with a physical Nymi Band, see the <a href="#development-with-a-nymi-band">Development with a Nymi Band</a> section, which describes the configuration changes required for running the JSON API and NapiCppWrapper against a physical Nymi Band.</p>
+
+<h2 id="development-with-a-nymi-band">Development with a Nymi Band</h2>
+
+<p>This section assumes that you have worked through the <a href="#development-with-the-nymulator">Development with the Nymulator</a> section for your platform, and therefore you already have the SDK and sample app downloaded and configured. Remember that Nymi-enabled apps (NEAs) communicate only with <em>authenticated</em> Nymi Bands. Use the Nymi Band app to authenticate the Nymi Band before you use the sample app.</p>
+
+<p>To work with a physical Nymi Band, follow the appropriate procedure below.</p>
+
+<h3 id="for-windows-os">For Windows OS:</h3>
+
+<ol>
+  <li>Shut down the Nymulator.
+<br /><br /></li>
+  <li>Plug in the Bluetooth adapter (included in the box with your Nymi Band).
+<br /><br /></li>
+  <li>Install and enable the Nymi Bluetooth Service (included in <code>sdk4.0\NymiBluetoothService\</code>).
+<br /><br /></li>
+  <li>In <code>main.cpp</code>, change the port number (<code>nPort</code>) to <strong>9089</strong>.
+<br /><br /></li>
+  <li>Rebuild and rerun <code>NapiCpp</code>. The message <code>Provisioning mode is now start</code> appears in the command window. 
+<br /><br /></li>
+  <li>Tap the top sensor on your Nymi Band continuously until you see the provisioning pattern (that is, the lights flash in an outward pattern, from the center out to both sides). You can expect to see the pattern after four taps. 
+<br /><br /></li>
+  <li>Provision your Nymi Band.
+    <ol>
+      <li>Confirm that the light pattern in the command window matches the one displayed on your Nymi Band.</li>
+      <li>In the command window, type <code>accept</code> followed by the plus/minus sign pattern that matches the light pattern on your Nymi Band.</li>
+    </ol>
+  </li>
+</ol>
+
+<h3 id="for-mac-os-x">For Mac OS X:</h3>
+
+<ol>
+  <li>Shut down the Nymulator.
+<br /><br /></li>
+  <li>Copy <code>libnapi.a</code> into the dependencies directory of the sample app: <code>sdk4.0\deps\</code>.
+<br /><br /></li>
+  <li>Update your project so that the <code>libnapi.a</code> file is the first linked library.
+    <ol>
+      <li>In Xcode, click the solution name.</li>
+      <li>Click the NapiCpp target.</li>
+      <li>Click <strong>Build Phases</strong>.</li>
+      <li>Expand the <strong>Link Binary With Libraries</strong> section.
+ <br /><br />
+ <img alt="Update the project library linking" src="images/Xcode-library-settings.png" />
+ <br /><br /></li>
+      <li>Drag and drop the <code>libnapi.a</code> file above the <code>libnapi-net.a</code> file. The project links against the first library in this list.</li>
+      <li>Save the project.</li>
+    </ol>
+
+    <aside class="notice">
+ On OS X, NapiCppWrapper ignores the `nPort` value when you are not using the Nymulator.
+ </aside>
+  </li>
+  <li>Rebuild and rerun <code>NapiCpp</code>. The message <code>Provisioning mode is now start</code> appears in the console. 
+<br /><br /></li>
+  <li>Tap the top sensor on your Nymi Band continuously until you see the provisioning pattern (that is, the lights flash in an outward pattern, from the center out to both sides). You can expect to see the pattern after four taps. 
+<br /><br /></li>
+  <li>Provision your Nymi Band.
+    <ol>
+      <li>Confirm that the light pattern in the console matches the one displayed on your Nymi Band.</li>
+      <li>In the console, type <code>accept</code> followed by the plus/minus sign pattern that matches the light pattern on your Nymi Band.</li>
+    </ol>
+  </li>
+</ol>
+
+<aside class="success">
+Congratulations! You have successfully provisioned a physical Nymi Band.
+</aside>
+
+<h2 id="ready-to-write-your-own-nea">Ready to write your own NEA?</h2>
+
+<ul>
+  <li>Take a deeper dive into the features provided by the NapiCppWrapper sample app in the NapiCppWrapper <a href="#sample-app-walkthrough">Sample App Walkthrough</a></li>
+  <li>Review the <a href="#nymi-api-concepts">JSON API Background Concepts</a></li>
+  <li>Review the <a href="./jsonreference/index.html">JSON API reference pages</a></li>
+</ul>
+
+
+          <h1 id="sample-app-walkthrough">Sample App Walkthrough</h1>
+
+<h2 id="napicppwrapper">NapiCppWrapper</h2>
+<aside class="notice"> 
+The sample app and wrapper (NapiCppWrapper) are provided by the copyright holders and contributors "AS IS" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed.
+</aside>
+
+<p>The Nymi JSON API 4.0 runs as an in-process static library. To demonstrate the functionality exposed through the JSON API, we have provided a sample application (NapiCppWrapper). The sample app is an NEA written in C++, over a wrapper layer that provides a C++ interface to the JSON API. The wrapper layer handles most of the lower level asynchronous message passing to and from the JSON API.</p>
+
+<p>In the sample app, the NEA is represented by the <code>main.cpp</code> file. This file (the NEA) consumes the wrapper in order to interact with the JSON API. The wrapper layer is a resuable component that you can use or modify for writing your own NEA. The sample app has a command-line interface for demonstrating input and output of commands.</p>
+
+<p>The public functions are defined in <code>NymiApi.h</code> and <code>NymiProvision.h</code>. The Listener class waits for and receives messages from the JSON API, then calls the appropriate NEA callback.</p>
+
+<p>For information about the contents of the SDK package, and supported platforms, see the <a href="#developer-quick-start">Developer Quick Start</a>.</p>
+
+<aside class="notice"> 
+This walkthrough assumes that you understand the basic process of installing, configuring, and running the Nymi JSON API and NapiCppWrapper. These instructions are provided in the Developer Quick Start for your platform. 
+</aside>
+
+<h3 id="about-this-walkthrough">About this walkthrough</h3>
+
+<p>In this walkthrough, all examples are presented in the same format:</p>
+
+<ol>
+  <li>The command to run (as an end-user) on the NapiCppWrapper command-line to initiate some operation (for example, to get a random number from the Nymi Band).</li>
+  <li>The relevant function to call in NapiCppWrapper, that initiates the same operation with the JSON API.</li>
+  <li>Definition of any input or output requirements.</li>
+  <li>Explanation of the associated callback.</li>
+</ol>
+
+<h2 id="files-created-by-the-json-api">Files Created by the JSON API</h2>
+
+<p>When the JSON API process runs, it creates a number of files in the directory containing the project file.</p>
+
+<p>The JSON API creates log files with the extension <code>.log</code>. These are used as a diagnostic tool.</p>
+
+<p>The file <code>provisions.json</code> holds the information pertinent to all provisioned Nymi Bands. You can remove provisions through the API. This file is written to the directory that the wrapper or JSON API is initialized to.</p>
+
+<p><strong>Note:</strong> Manually editing <code>provisions.json</code> is strongly discouraged. Do not attempt to parse this file in your NEA: the contents and layout of the file are officially undocumented because this file changes as features are added. All actionable information contained in the file is available through the API.</p>
+
+<h2 id="before-you-begin">Before You Begin</h2>
+
+<p>Optional: To change the name of your sample app:</p>
+
+<ol>
+  <li>Open the <code>config.json</code> file.</li>
+  <li>Change the value of <code>neaName</code>. The default value is “NapiCppWrapper”.</li>
+  <li>Save and close the file.</li>
+</ol>
+
+<p>Example of the <code>config.json</code> file:</p>
+
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"neaName"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"NapiCppWrapper"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"sigAlgorithm"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"NIST256P"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>The <code>sigAlgorithm</code> property specifies the signing algorithm that is used. The default is NIST256P. The only other supported algorithm is <code>SECP256K</code>.</p>
+
+<h2 id="initialize-the-json-api">Initialize the JSON API</h2>
+
+<p>Before an NEA can send commands to the Nymi Band, it must first initialize the JSON API. In NapiCppWrapper, initialization parameters are sent to the JSON API in the call to <code>NymiApi::getNymiApi</code>.</p>
+
+<p>The main C++ wrapper class (<code>NymiApi.h</code>) follows the singleton pattern. The process of constructing an instance of the wrapper also initializes the JSON API.</p>
+
+<p>Public function defined in <code>NymiApi.h</code>:</p>
+
+<pre class="highlight cpp"><code><span class="k">static</span> <span class="n">NymiApi</span> <span class="o">*</span><span class="n">getNymiApi</span><span class="p">(</span><span class="n">nymi</span><span class="o">::</span><span class="n">ConfigOutcome</span> <span class="o">&amp;</span><span class="n">initResult</span><span class="p">,</span> <span class="n">errorCallback</span> <span class="n">onError</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">rootDirectory</span><span class="p">,</span> <span class="n">nymi</span><span class="o">::</span><span class="n">LogLevel</span> <span class="n">log</span> <span class="o">=</span> <span class="n">nymi</span><span class="o">::</span><span class="n">LogLevel</span><span class="o">::</span><span class="n">normal</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nymulatorPort</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">nymulatorHost</span> <span class="o">=</span> <span class="s">""</span><span class="p">);</span>
+</code></pre>
+<p><br />
+The function takes the following initialization parameters:<br /></p>
+<table>
+	<tr>
+		<td><b>Parameter</b></td>
+		<td><b>Values</b></td>
+	</tr>
+	<tr>
+		<td><code>initResult</code><br /></td>
+		<td>The result of the initialization, returned by the JSON API.<br />
+		<code>initResult</code> can have one of the following values:<br /><br />
+		<code>okay</code><br />
+		<code>failedToInit</code><br />
+		<code>configurationFileNotFound</code><br />
+		<code>configurationFileNotReadable</code><br />
+		<code>configurationFileNotParsed</code><br /><br />
+		A status of <code>okay</code> indicates that the JSON API is correctly initialized. 
+		All other values indicate that the initialization failed.</td>
+	</tr>
+	<tr>
+		<td><code>onError</code><br /></td>
+		<td>A mandatory error-handling callback.<br />
+		Handles general errors that are not specfic to the Nymi Band or NapiCppWrapper. The simplest implementation would be to print the error string. </td>
+	</tr>
+	<tr>
+		<td><code>rootDirectory</code><br /></td>
+		<td>Defines the location of the config and provision files.<br />
+		Example: "." = use this directory. <br />
+		You can specify a different directory.</td>
+	</tr>
+	<tr>
+		<td><code>LogLevel</code><br /></td>
+		<td>Possible values:<br />
+		normal<br />
+		info<br />
+		debug<br />
+		verbose<br />
+		</td>
+	</tr>
+	<tr>
+		<td><code>nymulatorPort</code><br /></td>
+		<td>Default value is: 9088 for the Nymulator.<br />
+		To connect to a physical Nymi Band on Windows, set <code>nPort</code> to: 9089. <br />
+		On OS X, if you are not using the Nymulator, the port number is ignored. </td>
+	</tr>
+	<tr>
+		<td><code>nymulatorHost</code><br /></td>
+		<td>Example: "127.0.0.1"</td>
+	</tr>
+</table>
+
+<p><br /><br />
+The Listener class waits for a JSON message from the JSON API. When a message is detected, the Listener tests for a well-constructed JSON object, then passes the JSON message to the appropriate handler. 
+<br /><br /></p>
+
+<p>After the JSON API is initialized, you can <a href="#provision-a-nymi-band">provision</a> and <a href="#authenticating-a-nymi-band">authenticate</a> a Nymi Band, and use the <a href="#actions">actions</a>, such as generating random numbers or TOTP tokens.</p>
+
+
+          <h2 id="provision-a-nymi-band">Provision a Nymi Band</h2>
+
+<p>This step assumes that the user has clasped their Nymi Band and authenticated to it by some method (such as HeartID). If you are developing against a Nymulator, the Nymulator puts the virtual Nymi Band in an authenticated state, ready for provisioning, when it is created.</p>
+
+<p>The <em>one-time</em> process of provisioning is initiated by the Nymi Band, and agreed upon mutually by the NEA and the Nymi Band. The process entails a cryptographic key exchange, which allows both parties to securely identify each other and communicate in future sessions.</p>
+
+<p><b>Note:</b> Conceptual information about provisioning can be found in the <a href="#bound-authenticator">Bound Authenticator</a> section of <a href="#nymi-api-concepts">Nymi API Concepts</a>.</p>
+
+<p>You can also <a href="#list-provisions">list provisions</a> and <a href="#revoke-provisions">revoke provisions</a> through the JSON API.</p>
+
+<h3 id="start-provisioning">Start provisioning</h3>
+
+<p>The Nymi Band must be put into provisioning mode by the user so that the NEA can detect it. In the Nymulator, click <strong>Begin Provisioning</strong>. For a physical Nymi Band, tap continously until the outward light pattern appears.</p>
+
+<p><strong>NapiCppWrapper command:</strong> <code>provision-start</code></p>
+
+<pre class="highlight cpp"><code><span class="c1">//Public function in NymiApi.h:
+</span><span class="n">bool</span> <span class="n">startProvisioning</span><span class="p">(</span><span class="n">agreementCallback</span> <span class="n">onPattern</span><span class="p">,</span> <span class="n">newProvisionCallback</span> <span class="n">onProvision</span><span class="p">);</span>
+</code></pre>
+
+<p>The callbacks - <code>onPattern</code> and <code>onProvision</code> - are defined in <code>NeaCallbackTypes.h</code>.</p>
+
+<pre class="highlight cpp"><code><span class="k">using</span> <span class="n">agreementCallback</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">newProvisionCallback</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="n">NymiProvision</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre>
+
+<p>The Listener class waits for a JSON message containing an agreement pattern from the Nymi Band. A pattern is generated on the LEDs of the Nymi Band and is computed separately by the JSON API.</p>
+
+<p><code>agreementCallback onPattern</code> returns the string representation of the light pattern on the Nymi Band.</p>
+
+<p><code>newProvisionCallback</code> returns the provision ID (<code>pid</code>) of the Nymi Band, which the NEA can use to uniquely identify it. This ID persists in the <code>provisions.json</code> file until it is revoked through the JSON API.</p>
+
+<p><strong>Important:</strong> The provision ID must be kept private to the NEA.</p>
+
+<p>The sample app prompts the user to confirm that the light pattern they see on their Nymi Band matches the one generated by the JSON API and presented by the NEA.</p>
+
+<p><strong>NapiCppWrapper command:</strong> <code>accept [+|-]{5}</code> <br />
+where <code>[+|-]{5}</code> is a regex for a five (5) character string that is composed of plus ‘+’ (LED on) and/or minus ‘-‘ (LED off) signs.<br />
+For example: <code>+-+-+</code> represents ON, OFF, ON, OFF, ON</p>
+
+<p>An NEA must prompt the user to confirm the light pattern on their Nymi Band in some way.</p>
+
+<pre class="highlight cpp"><code><span class="c1">//Public function in NymiApi.h:
+</span><span class="kt">void</span> <span class="n">acceptPattern</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">pattern</span><span class="p">);</span>
+</code></pre>
+
+<p>The <code>pattern</code> required here is as described in the sample app command.</p>
+
+<h3 id="end-provisioning-mode">End provisioning mode</h3>
+
+<p><strong>NapiCppWrapper command:</strong> <code>provision-stop</code></p>
+
+<pre class="highlight cpp"><code><span class="c1">//Public function in NymiApi.h:
+</span><span class="kt">void</span> <span class="n">stopProvisioning</span><span class="p">();</span>
+</code></pre>
+
+<p>Disabling provisioning mode is good practice if the NEA does not need to provision additional bands. Otherwise, it may provision with other discoverable Nymi Bands in the area. You can, however, leave the JSON API in provisioning mode if required.</p>
+
+<p>After an NEA has provisioned with a Nymi Band, it can securely <a href="#authenticating-a-nymi-band">authenticate</a> the Nymi Band when the Nymi Band is present within Bluetooth transmission range. For details, see <a href="#authenticating-a-nymi-band">Authenticating a Nymi Band</a>.</p>
+
+<p>An NEA can also request actions, as described in <a href="#actions">Actions</a>, and the JSON API will ensure that the Nymi Band is authenticated as part of the process of performing the requested action.</p>
+
+<h3 id="list-provisions">List Provisions</h3>
+
+<p>All provisions are saved in the <code>provisions.json</code> file. There are two lists of provisions that you can retrieve through the JSON API: <code>all</code> or <code>present</code>.</p>
+
+<p><strong>NapiCppWrapper command:</strong> <code>provision-gethere</code> OR <code>provision-getall</code></p>
+
+<pre class="highlight cpp"><code><span class="c1">//Public function in NymiApi.h:
+</span><span class="n">bool</span> <span class="n">getProvisions</span><span class="p">(</span><span class="n">getProvisionsCallback</span> <span class="n">getProvList</span><span class="p">,</span> <span class="n">ProvisionListType</span> <span class="n">type</span><span class="p">);</span>
+</code></pre>
+
+<p>where <code>type</code> for <code>ProvisionListType</code> is defined as: <code>ALL</code> or <code>PRESENT</code>.</p>
+
+<p>The <code>getProvisionsCallback</code> returns the list of provisions of the <code>type</code> specified.</p>
+
+<h3 id="revoke-provisions">Revoke Provisions</h3>
+
+<p>You can revoke a provision between an NEA and a Nymi Band from the NEA. The user can also revoke a provision from the Nymi Band app.</p>
+
+<p><strong>NapiCppWrapper command:</strong> <code>delete-prov i</code><br />
+where <code>i</code> is the index of the band in <code>std::vector&lt;NymiProvision&gt; bands</code>.</p>
+
+<pre class="highlight cpp"><code><span class="c1">//Public function in NymiProvision.h:
+</span><span class="n">bool</span> <span class="n">revokeProvision</span><span class="p">(</span><span class="n">bool</span> <span class="n">only_if_authenticated</span><span class="p">,</span> <span class="n">onProvisionRevokedCallback</span> <span class="n">onProvRevoked</span><span class="p">);</span>
+</code></pre>
+
+<p>A provision is located in two places: in the JSON API provision database, and on the provisioned Nymi Band.</p>
+
+<p>When <code>only_if_authenticated</code> is <code>false</code>, the provision is revoked from the JSON API provision database. If the provisioned Nymi Band is authenticated (that is, found and present), an attempt is made to remove the provision from the Nymi Band as well. If it is not present, or if the attempt to remove the provision from the Nymi Band fails, the user must delete the now unused provision through the Nymi Band app.</p>
+
+<p>When <code>only_if_authenticated</code> is <code>true</code>, the provision is not removed from the NAPI provision database until after the provision is successfully removed from the Nymi Band.</p>
+
+
+          <h2 id="authenticating-a-nymi-band">Authenticating a Nymi Band</h2>
+
+<p>After an NEA has <a href="#provision-a-nymi-band">provisioned</a> a Nymi Band, it must still securely authenticate it to confirm that the Nymi Band is found (authenticated), and present (within Bluetooth wireless transmission range).</p>
+
+<h4 id="to-securely-authenticate-a-nymi-band">To securely authenticate a Nymi Band:</h4>
+
+<ol>
+  <li>Enable notifications from the JSON API.</li>
+  <li>Get the Found status of the Nymi Band.</li>
+  <li>Get the Presence status of the Nymi Band.</li>
+</ol>
+
+<h3 id="enable-json-api-notifications">Enable JSON API Notifications</h3>
+
+<p>The JSON API provides a notification service that the NEA can subscribe to. An NEA can be notified of certain events or changes. In particular:<br />
+<code>onFoundChange</code> when the current found state of a Nymi Band changes<br />
+<code>onPresenceChange</code> when the presence of a Nymi Band changes<br /></p>
+
+<p>These change notifications are enabled or disabled by setting a corresponding flag to true or false. You can change this flag as often as required. When the NEA starts, all notifications are disabled. Enabling or disabling a particular notification type does not affect any other type.</p>
+
+<p><strong>To enable OnFoundChange notifications:</strong></p>
+
+<p><strong>NapiCppWrapper command:</strong> <code>onfoundchange-start</code></p>
+
+<p>The <code>onFoundChange</code> notification contains:</p>
+
+<ul>
+  <li>the provision ID (<code>pid</code>) of the Nymi Band <br /></li>
+  <li>parameters that indicates the state <em>before</em> and the state <em>after</em> the found state change</li>
+</ul>
+
+<pre class="highlight cpp"><code><span class="c1">//Public function in NymiApi.h:
+</span><span class="n">bool</span> <span class="n">setOnFoundChange</span><span class="p">(</span><span class="n">onNymiBandFoundStatusChange</span> <span class="n">onFoundChange</span><span class="p">);</span>
+</code></pre>
+
+<p>The <code>onFoundChange</code> callback expresses the change in found state with a before and after parameter. The <code>after</code> parameter is the state that the Nymi Band transitioned to. The notification is fired after the transition is completed.</p>
+
+<pre class="highlight cpp"><code><span class="c1">// Callback
+</span><span class="k">using</span> <span class="n">onNymiBandFoundStatusChange</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="n">FoundStatus</span><span class="p">,</span><span class="n">FoundStatus</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre>
+
+<p>When the <code>onFoundChange</code> callback is called with an <code>after</code> parameter of <code>FoundStatus::AUTHENTICATED</code>, then the Nymi Band can be treated as securely authenticated. This state persists until the callback is called again to notify the NEA of a Nymi Band’s transition to some other state.</p>
+
+<p><strong>Possible Found States of <code>onFoundChange</code>:</strong></p>
+
+<table>
+	<tr>
+		<td><strong>Found State</strong></td>
+		<td><strong>The Nymi Band is...</strong> </td>
+	</tr>
+	<tr>
+		<td>undetected</td>
+		<td>undetected (normally occurs when the Nymi Band 'walks away')</td>
+	</tr>
+	<tr>
+		<td>unclasped</td>
+		<td>unclasped (normally occurs after the Nymi Band has been authenticated)</td>
+	</tr>
+	<tr>
+		<td>unprovisionable</td>
+		<td>unable to be provisioned, normally because the Nymi Band is fully provisioned (by other NEAs)</td>
+	</tr>
+	<tr>
+		<td>anonymous</td>
+		<td>not provisioned by this NEA (can occur for a short time when a provisioned Nymi Band is first detected)</td>
+	</tr>
+	<tr>
+		<td>discovered</td>
+		<td>in provisioning mode</td>
+	</tr>
+	<tr>
+		<td>provisioning</td>
+		<td>in the process of being provisioned</td>
+	</tr>
+	<tr>
+		<td>identified</td>
+		<td>claiming to be a provisioned band but this has not been confirmed (the JSON API attempts to confirm)</td>
+	</tr>
+	<tr>
+		<td>authenticated</td>
+		<td>confirmed as provisioned with this NEA</td>
+	</tr>
+</table>
+
+<p>If the Nymi Band has been authenticated within the last minute, and then moves out of transmission range (for example, the user walks away), then it can take up to a minute for the JSON API to trigger the callback. In this case, you can use the <code>onPresenceChange</code> callback to determine the time since the NEA last heard from the Nymi Band. See the <em>Possible Presence States of <code>onPresenceChange</code></em> table.</p>
+
+<p><br /><br />
+<strong>To enable <code>onPresenceChange</code> notifications:</strong></p>
+
+<p><strong>NapiCppWrapper command:</strong> <code>onpresencechange-start</code></p>
+
+<pre class="highlight cpp"><code><span class="c1">//Public function in NymiApi.h:
+</span><span class="n">bool</span> <span class="n">setOnPresenceChange</span><span class="p">(</span><span class="n">onNymiBandPresenceChange</span> <span class="n">onPresenceChange</span><span class="p">);</span>
+</code></pre>
+
+<p>The <code>onPresenceChange</code> notification contains:</p>
+
+<ul>
+  <li>the provision ID (<code>pid</code>) of the Nymi Band <br /></li>
+  <li>parameters that indicates the state <em>before</em> and the state <em>after</em> the presence change<br /></li>
+  <li>a boolean parameter indicating whether the Nymi Band is currently authenticated</li>
+</ul>
+
+<pre class="highlight cpp"><code><span class="c1">// Callback
+</span><span class="k">using</span> <span class="n">onNymiBandPresenceChange</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="n">PresenceStatus</span><span class="p">,</span><span class="n">PresenceStatus</span><span class="p">,</span><span class="n">bool</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre>
+
+<p><strong>Important:</strong> The presence state of a Nymi Band only reflects whether or not Bluetooth packets are received. When Bluetooth packets are received, the Nymi Band is simply advertising its presence. In particular, a presence state of <code>yes</code> means that Bluetooth packets have been received, but the Nymi Band should not be treated as authenticated unless <code>bool authenticated</code> is <code>true</code> in the <code>onPresenceChange</code> callback.</p>
+
+<p>When the <code>onPresenceChange</code> callback is called with an <code>after</code> state of <code>yes</code> and authenticated is <code>true</code>, the Nymi Band can be treated as both present (in transmission range) and authenticated. This is true until <code>onPresenceChange</code> is called with a transition to some other state, or authenticated is <code>false</code>, or <code>onFoundChange</code> transitions to a state other than authenticated.</p>
+
+<p><strong>Possible Presence States of <code>onPresenceChange</code>:</strong></p>
+
+<table>
+	<tr>
+		<td><strong>Presence State</strong></td>
+		<td><strong>The JSON API has...</strong> </td>
+	</tr>
+	<tr>
+		<td>yes</td>
+		<td>received an advertisement from the Nymi Band within the last 5 seconds</td>
+	</tr><tr>
+		<td>likely</td>
+		<td>received an advertisement from the Nymi Band within the last 15 seconds</td>
+	</tr><tr>
+		<td>unlikely</td>
+		<td>received an advertisement from the Nymi Band within the last 60 seconds</td>
+	</tr><tr>
+		<td>no</td>
+		<td>not received an advertisement from the Nymi Band for more than 60 seconds</td>
+	</tr>
+</table>
+
+<h3 id="info-command">Info command</h3>
+
+<p>In the sample app, use the <code>info</code> command to display the current status of a selected Nymi Band.</p>
+
+<p><strong>NapiCppWrapper</strong> command: <code>info i</code><br />
+where <code>i</code> is the index of the band in <code>std::vector&lt;NymiProvision&gt; bands</code>.</p>
+
+
+          <h2 id="actions">Actions</h2>
+
+<p>An NEA can initiate the following requests/actions:</p>
+
+<ul>
+  <li><a href="#sign-hash">Sign Hash</a></li>
+  <li><a href="#get-random-number">Get Random Number</a></li>
+  <li><a href="#create-totp">Create TOTP</a></li>
+  <li><a href="#retrieve-totp">Retrieve TOTP</a></li>
+  <li><a href="#create-symmetric-key">Create Symmetric Key</a></li>
+  <li><a href="#retrieve-symmetric-key">Retrieve Symmetric Key</a></li>
+  <li><a href="#revoke-totp-or-symmetric-keys">Revoke TOTP or Symmetric Keys</a></li>
+  <li><a href="#provide-haptic-feedback">Provide Haptic Feedback</a></li>
+</ul>
+
+<p>In all cases, the actions are described in this section as follows:</p>
+
+<ul>
+  <li>A brief conceptual introduction to the action.</li>
+  <li>The command to run (as an end-user) on the NapiCppWrapper command-line to initiate some operation (for example, to get a random number from the Nymi Band).</li>
+  <li>The relevant function to call in NapiCppWrapper, that initiates the same operation with the JSON API.</li>
+  <li>A description of the callback.</li>
+</ul>
+
+<p>The public functions of the C++ wrapper are defined in <code>NymiApi.h</code>, <code>NymiProvision.h</code>, and <code>TransientNymiBandInfo.h</code>. Every wrapper function takes a callback. The Listener class waits for and receives messages from the JSON API, then calls the appropriate NEA callback. The callback returns the information that was requested from the Nymi Band. Each callback also contains error handling (<code>napiError</code>).</p>
+
+<p>The callbacks for user-initiated operations on a provisioned Nymi Band all follow the same pattern:</p>
+
+<pre class="highlight cpp"><code><span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="n">bool</span> <span class="n">opResult</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">pid</span><span class="p">,</span> <span class="o">*</span><span class="n">the</span> <span class="n">information</span> <span class="n">that</span> <span class="n">was</span> <span class="n">requested</span><span class="o">*</span><span class="p">,</span> <span class="n">napiError</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre>
+
+<p>If <code>opResult</code> is <code>true</code>, the variables that follow contain the requested information for the Nymi Band identified by the <code>pid</code> (provision ID). In this case, you can ignore <code>napiError</code>.</p>
+
+<p>If <code>opResult</code> is <code>false</code>, then <code>napiError</code> contains the error that occurred. In this case, you should ignore the arguments that contain <em>the information that was requested</em>.</p>
+
+<p>For example: <br />
+The request for a random number from the Nymi Band has one of the simplest callbacks.</p>
+
+<pre class="highlight cpp"><code><span class="c1">// Callback for random number request
+</span><span class="k">using</span> <span class="n">randomCallback</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="n">bool</span> <span class="n">opResult</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">pid</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">rand</span><span class="p">,</span> <span class="n">napiError</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre>
+
+<p>If <code>opResult</code> is true, <code>rand</code> contains the random number requested, and <code>napiError</code> should be ignored.
+If <code>opResult</code> is false, <code>napiError</code> contains the error, and <code>rand</code> should be ignored.</p>
+
+<p>This pattern for <code>opResult</code> and <code>napiError</code> is true for all of the action callbacks discussed in this section.</p>
+
+<h3 id="sign-hash">Sign Hash</h3>
+
+<p>To request a signature, the NEA must specify the desired curve type and provide a message to be signed. The message supplied to the JSON API must be the 32 byte hash of the original message. The hash function is currently fixed as SHA256. The following curve types are supported:</p>
+
+<ul>
+  <li>NIST P-256</li>
+  <li>Secp256k1</li>
+</ul>
+
+<p>The secret key of the ECDSA signing key pair (<code>sk</code>) is saved on the Nymi Band and is not shared with any parties. A 64 byte verification key (<code>vk</code>) and the signed message are returned to the NEA. Using standard cryptographic libraries, the NEA can verify the signature by providing the signed message, the original message, the verification key (<code>vk</code>), and the ECDSA curve type to a verification function.</p>
+
+<p><strong>NapiCppWrapper command:</strong> <code>get-signature i</code><br />
+where <code>i</code> is the index of the band in <code>std::vector&lt;NymiProvision&gt; bands</code></p>
+
+<p><strong>Note:</strong> The NapiCppWrapper sample app always gets the signature of a currently hard-coded message.</p>
+
+<pre class="highlight cpp"><code><span class="c1">// Public function from NymiProvision.h:
+</span><span class="n">bool</span> <span class="n">signMessage</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">message</span><span class="p">,</span> <span class="n">ecdsaSignCallback</span> <span class="n">onMessageSigned</span><span class="p">);</span>
+</code></pre>
+
+<p>where <code>message</code> is a string that is typically a SHA256 hash of a message.
+<br /><br />
+The <code>onMessageSigned</code> callback is called with the following information:</p>
+
+<ul>
+  <li><code>pid</code> - the provision ID of the Nymi Band</li>
+  <li><code>sig</code> - the signature</li>
+  <li><code>vk</code> - the 64 byte verification key</li>
+</ul>
+
+<pre class="highlight cpp"><code><span class="c1">// Callback
+</span><span class="k">using</span> <span class="n">ecdsaSignCallback</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="n">bool</span> <span class="n">opResult</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">pid</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">sig</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">vk</span><span class="p">,</span> <span class="n">napiError</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre>
+
+<h3 id="get-random-number">Get Random Number</h3>
+
+<p>The Nymi Band can generate 128 bit random numbers. The 128 bit block is not stored anywhere.</p>
+
+<p><strong>NapiCppWrapper command:</strong> <code>get-random i</code><br />
+where <code>i</code> is the index of the band in <code>std::vector&lt;NymiProvision&gt; bands</code></p>
+
+<pre class="highlight cpp"><code><span class="c1">// Public function from NymiProvision.h:
+</span><span class="n">bool</span> <span class="n">getRandom</span><span class="p">(</span><span class="n">randomCallback</span> <span class="n">onRandom</span><span class="p">);</span>
+</code></pre>
+
+<p>The onRandom callback is called with the following information:</p>
+
+<ul>
+  <li><code>pid</code> - the provision ID of the Nymi Band</li>
+  <li><code>rand</code> - the random number</li>
+</ul>
+
+<pre class="highlight cpp"><code><span class="c1">// Callback
+</span><span class="k">using</span> <span class="n">randomCallback</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="n">bool</span> <span class="n">opResult</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">pid</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">rand</span><span class="p">,</span> <span class="n">napiError</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre>
+
+<h3 id="create-totp">Create TOTP</h3>
+
+<p>The Nymi Band can generate time-based one-time password (TOTP) tokens using the current time and a TOTP secret key as inputs. Only the secret key needs to be provided by the NEA.</p>
+
+<p>When registering a TOTP key, an NEA can configure the Nymi Band to require user confirmation, in the form of a gesture (double tap), for retrieval of tokens. This is referred to as a guarded TOTP. When the NEA makes a request to retrieve a guarded TOTP token, it requires user confirmation within ten (10) seconds. Otherwise, the request times out.</p>
+
+<p><strong>Note:</strong> The NapiCppWrapper sample app uses a hard-coded TOTP secret key.</p>
+
+<p><strong>NapiCppWrapper command:</strong> <code>create-totp i g</code> <br />
+Registers a TOTP on Nymi Band i, where <code>i</code> is the index of the band in <code>std::vector&lt;NymiProvision&gt; bands</code>.<br />
+The option <code>g</code> specifies the guarded option: 1 = guarded, 0 = unguarded.</p>
+
+<p>The function requires a secret key (<code>totpKey</code>), and a boolean value indicating whether or not the key is guarded.</p>
+
+<pre class="highlight cpp"><code><span class="c1">// Public function from NymiProvision.h:
+</span><span class="n">bool</span> <span class="n">createTotpKey</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">totpKey</span><span class="p">,</span> <span class="n">bool</span> <span class="n">guarded</span><span class="p">,</span> <span class="n">createdKeyCallback</span> <span class="n">onCreatedKey</span><span class="p">);</span>
+</code></pre>
+
+<p>The <code>onCreatedKey</code> callback is called with the following information:</p>
+
+<ul>
+  <li><code>pid</code> - the provision ID of the Nymi Band</li>
+  <li><code>KeyType</code> - can be one of two values: TOTP, or SYMMETRIC</li>
+</ul>
+
+<pre class="highlight cpp"><code><span class="c1">// Callback
+</span><span class="k">using</span> <span class="n">createdKeyCallback</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="n">bool</span> <span class="n">opResult</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">pid</span><span class="p">,</span> <span class="n">KeyType</span><span class="p">,</span> <span class="n">napiError</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre>
+
+<p>The <code>createTotpKey</code> function only creates the TOTP secret key on the Nymi Band. In order to access the TOTP token the NEA must request it from the Nymi Band.</p>
+
+<h3 id="retrieve-totp">Retrieve TOTP</h3>
+
+<p>After creating a TOTP secret key, the NEA can retrieve a TOTP token from the Nymi Band. If the key was created with the guarded option, the Nymi Band notifies the user that their permission is required with a vibration (buzz/haptic feedback), and a light pattern (lights moving from outside edges to center). The user must perform the confirmation gesture (double tap) within ten (10) seconds of the buzz to allow retrieval of a token.</p>
+
+<p><strong>NapiCppWrapper command:</strong> <code>get-totp i</code> <br />
+where <code>i</code> is the index of the band in <code>std::vector&lt;NymiProvision&gt; bands</code>.</p>
+
+<p>The TOTP token is created by request, using the time of the request and the TOTP secret key.</p>
+
+<pre class="highlight cpp"><code><span class="c1">// Public function from NymiProvision.h:
+</span><span class="n">bool</span> <span class="n">getTotpKey</span><span class="p">(</span><span class="n">totpGetCallback</span> <span class="n">onTotpGet</span><span class="p">);</span>
+</code></pre>
+
+<p>The <code>onTotpGet</code> callback is called with the following information:</p>
+
+<ul>
+  <li><code>pid</code> - the provision ID of the Nymi Band</li>
+  <li><code>totp</code> - a string representation of the TOTP token</li>
+</ul>
+
+<pre class="highlight cpp"><code><span class="c1">// Callback
+</span><span class="k">using</span> <span class="n">totpGetCallback</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="n">bool</span> <span class="n">opResult</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">pid</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">totp</span><span class="p">,</span> <span class="n">napiError</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre>
+
+<h3 id="create-symmetric-key">Create Symmetric Key</h3>
+
+<p>The Nymi Band can generate 128 bit symmetric keys, with a ‘guarded’ option. When registering a symmetric key, an NEA can configure the Nymi Band to require user confirmation, in the form of a gesture (double tap), for key retrieval. This is referred to as a guarded symmetric key. Guarded symmetric keys add user intent to the key generation and retrieval by requiring the user to confirm the request. When the NEA makes a request to retrieve a guarded symmetric key, it requires user confirmation within ten (10) seconds. Otherwise, the request times out.</p>
+
+<p><strong>NapiCppWrapper command:</strong> <code>create-sk i g</code> <br />
+where <code>i</code> is the index of the band in <code>std::vector&lt;NymiProvision&gt; bands</code>.<br />
+Guarded option (<code>g</code>): 1 = guarded, 0 = unguarded.</p>
+
+<p>The <code>createSymmetricKey</code> function requires only a boolean value for guarded.</p>
+
+<pre class="highlight cpp"><code><span class="c1">// Public function from NymiProvision.h:
+</span><span class="n">bool</span> <span class="n">createSymmetricKey</span><span class="p">(</span><span class="n">bool</span> <span class="n">guarded</span><span class="p">,</span> <span class="n">createdKeyCallback</span> <span class="n">onCreatedKey</span><span class="p">);</span>
+</code></pre>
+
+<p>The <code>onCreatedKey</code> callback is called with the following information:</p>
+
+<ul>
+  <li><code>pid</code> - the provision ID of the Nymi Band</li>
+  <li><code>KeyType</code> - can be one of two values: TOTP, or SYMMETRIC</li>
+</ul>
+
+<pre class="highlight cpp"><code><span class="c1">// Callback
+</span><span class="k">using</span> <span class="n">createdKeyCallback</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="n">bool</span> <span class="n">opResult</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">pid</span><span class="p">,</span> <span class="n">KeyType</span><span class="p">,</span> <span class="n">napiError</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre>
+
+<h3 id="retrieve-symmetric-key">Retrieve Symmetric Key</h3>
+
+<p>After creating a symmetric key, the NEA can retrieve it from the Nymi Band. If the symmetric key was created with the guarded option, the Nymi Band notifies the user that their permission is required with a vibration (buzz/haptic feedback), and a light pattern (lights moving from outside edges to center). The user must perform the confirmation gesture (double tap) within ten (10) seconds of the buzz to allow retrieval of a symmetric key.</p>
+
+<p><strong>NapiCppWrapper command:</strong> <code>get-sk i</code> <br />
+where <code>i</code> is the index of the band in <code>std::vector&lt;NymiProvision&gt; bands</code>.</p>
+
+<pre class="highlight cpp"><code><span class="c1">// Public function from NymiProvision.h:
+</span><span class="n">bool</span> <span class="n">getSymmetricKey</span><span class="p">(</span><span class="n">symmetricKeyCallback</span> <span class="n">onSymmetric</span><span class="p">);</span>
+</code></pre>
+
+<p>The <code>onSymmetric</code> callback is called with the following information:</p>
+
+<ul>
+  <li><code>pid</code> - the provision ID of the Nymi Band</li>
+  <li><code>sk</code> - the symmetric key string</li>
+</ul>
+
+<pre class="highlight cpp"><code><span class="c1">// Callback
+</span><span class="k">using</span> <span class="n">symmetricKeyCallback</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="n">bool</span> <span class="n">opResult</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">pid</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">sk</span><span class="p">,</span> <span class="n">napiError</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre>
+
+<h3 id="revoke-totp-or-symmetric-keys">Revoke TOTP or Symmetric Keys</h3>
+
+<p>You can remove a TOTP token, or a symmetric key, from the Nymi Band with the <code>revokeKey</code> function.</p>
+
+<p><strong>NapiCppWrapper command:</strong> <code>delete-totp i</code> OR <code>delete-sk i</code> <br />
+where <code>i</code> is the index of the band in <code>std::vector&lt;NymiProvision&gt; bands</code></p>
+
+<p>NapiCppWrapper uses one function to revoke keys, and requires the NEA to specify which type of key (TOTP or symmetric) to revoke.</p>
+
+<pre class="highlight cpp"><code><span class="c1">//Public function from NymiProvision.h:
+</span><span class="n">bool</span> <span class="n">revokeKey</span><span class="p">(</span><span class="n">KeyType</span> <span class="n">keyType</span><span class="p">,</span> <span class="n">revokedKeyCallback</span> <span class="n">onRevokedKey</span><span class="p">);</span>
+</code></pre>
+
+<p>where <code>keyType</code> is either <code>TOTP</code> or <code>SYMMETRIC</code>.</p>
+
+<p>The <code>onRevokedKey</code> callback is called with the following information:</p>
+
+<ul>
+  <li><code>pid</code> - the provision ID of the Nymi Band</li>
+  <li><code>KeyType</code> - the type of the key</li>
+</ul>
+
+<pre class="highlight cpp"><code><span class="c1">// Callback
+</span><span class="k">using</span> <span class="n">revokedKeyCallback</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="n">bool</span> <span class="n">opResult</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">pid</span><span class="p">,</span> <span class="n">KeyType</span><span class="p">,</span> <span class="n">napiError</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre>
+
+<h3 id="provide-haptic-feedback">Provide Haptic Feedback</h3>
+
+<p>The Nymi Band core includes a haptic motor for providing feedback to the user as a vibration (or ‘buzz’).</p>
+
+<p>The Nymi standard actions are defined as:</p>
+
+<ul>
+  <li>POSITIVE = Single buzz = success</li>
+  <li>NEGATIVE = Double buzz = failure</li>
+</ul>
+
+<p>The Nymi Band also generates a light pattern:</p>
+
+<ul>
+  <li>Success - All five LEDs blink once.</li>
+  <li>Failure/Error - LEDs 2 and 4, then 3 and 5, flash and repeat. (Counting LEDs from left to right.)</li>
+</ul>
+
+<p><strong>Tip:</strong> To see what these patterns look like: open the Nymi Band app and view the in-app Help.</p>
+
+<p><strong>NapiCppWrapper command:</strong> <code>buzz i s</code><br />
+where <code>i</code> is the index of the band in <code>std::vector&lt;NymiProvision&gt; bands</code>, and <code>s</code> is the status option (1=success, 0=failure).</p>
+
+<pre class="highlight cpp"><code><span class="c1">// Public function from NymiProvision.h:
+</span><span class="n">bool</span> <span class="n">sendNotification</span><span class="p">(</span><span class="n">HapticNotification</span> <span class="n">notifyType</span><span class="p">,</span> <span class="n">onNotificationCallback</span> <span class="n">onNotified</span><span class="p">);</span>
+</code></pre>
+
+<p>where <code>notifyType</code> is defined as: <br />
+	NOTIFY_POSITIVE = 1<br />
+	NOTIFY_NEGATIVE = 0</p>
+
+<p>The callback is called with the following information:</p>
+
+<ul>
+  <li><code>pid</code> - the provision ID of the Nymi Band</li>
+  <li><code>HapticNotification</code> - the type of notification</li>
+</ul>
+
+<pre class="highlight cpp"><code><span class="c1">// Callback
+</span><span class="k">using</span> <span class="n">onNotificationCallback</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="n">bool</span> <span class="n">opResult</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">pid</span><span class="p">,</span> <span class="n">HapticNotification</span><span class="p">,</span> <span class="n">napiError</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre>
+
+
+          <h1 id="nymi-api-concepts">Nymi API: Concepts</h1>
+
+<p>This section outlines the key concepts and features that are exposed through the Nymi API for the development of a Nymi-enabled Application (NEA).</p>
+
+<p>The available feature set depends on whether the Nymi Band’s interaction with the NEA is characterized as a <a href="#bound-authenticator">bound authenticator</a> or a <a href="#roaming-authenticator">roaming authenticator</a>. In either case, the Nymi Band is the <em>authenticator</em>.</p>
+
+<p>Communication between an NEA and the Nymi Band is always initiated by the NEA. If interpreted as
+the client-server model, the Nymi Band is a server and the NEA is a client. In Bluetooth
+terminology, the Nymi Band is a peripheral device and the NEA is a central device.</p>
+
+<p><strong>In this section, every reference to a Nymi Band must be understood as an authenticated Nymi Band.</strong></p>
+
+<p>See the <a href="#the-nymi-ecosystem">The Nymi Ecosystem</a> section for an overview of how to authenticate a Nymi Band.</p>
+
+<h2 id="nymi-band-information">Nymi Band Information</h2>
+
+<p>An NEA can retrieve basic information on any Nymi Band that is within Bluetooth transmission range. The following properties are exposed:</p>
+
+<ul>
+  <li>Authentication status: Indicates the Nymi Band’s authentication status (also referred to as <code>found</code> status). Possible values include: undetected, unclasped, unprovisionable, anonymous, discovered, provisioning, identified, and authenticated.</li>
+  <li>Presence status: Indicates whether the Nymi Band is present within range of the NEA. Possible values include: Yes, Likely, Unlikely, and No.</li>
+  <li>Provision status: Indicates if the Nymi Band is <a href="#provisioning">provisioned</a> to the inquiring NEA.</li>
+  <li>RSSI : A measure of Bluetooth signal strength in the range  [-1 (<em>very</em> strong), -90 (weak)].</li>
+  <li>Smoothed RSSI: An exponential smoothing algorithm applied to the RSSI stream.</li>
+  <li>Time since last contact: The amount of time, in seconds, since the Nymi Band was last heard from.</li>
+  <li>Authentication window remaining: A counter indicating how much of the authentication window remains. The total window is 60 seconds. If no contact with the Nymi Band occurs during this time, then the Presence status changes.</li>
+  <li>Number of commands queued: The number of operations in the Nymi Band’s work queue.</li>
+</ul>
+
+<p>Obtaining information about a Nymi Band does not imply a secure identification of an authenticated Nymi Band. See the <a href="#bound-authentication">Bound Authentication</a> section to learn about how to securely identify an authenticated
+Nymi Band.</p>
+
+<h2 id="bound-authenticator">Bound Authenticator</h2>
+
+<p>A bound authenticator is one that has a logical coupling with a device that calls on the authenticator.
+In the Nymi ecosystem, this logical coupling is referred to as <strong>provisioning</strong>, and it establishes a 
+trusted relationship between the Nymi Band and a specific NEA, running on a specific device.</p>
+
+<p>Provisioning allows an NEA to do the following:</p>
+
+<ul>
+  <li>Securely authenticate an associated Nymi Band</li>
+  <li>Communicate a positive or negative status through <a href="#providing-feedback-to-the-nymi-band">haptic feedback</a> to the Nymi Band</li>
+  <li>Use a number of <a href="#cryptographic-api">security features</a> offered by the Nymi Band. These concepts are 
+explained below.</li>
+</ul>
+
+<h3 id="provisioning">Provisioning</h3>
+
+<p>The <em>one-time</em> process of provisioning is initiated by the Nymi Band, and agreed upon mutually
+by the NEA and the Nymi Band. The process entails a cryptographic key exchange that allows both
+parties to securely identify each other and communicate in future sessions.</p>
+
+<p>The <a href="#developer-quick-start">Developer Quick Start</a> describes how to provision a Nymi Band with the sample app. The following high level steps are an illustration of the concepts behind the provisioning process.</p>
+
+<ol>
+  <li>
+    <p>The user puts their authenticated Nymi Band in <em>provisioning mode</em>, by tapping the band continuously until the LED lights
+display an outward animated pattern (that is, from the center light out).</p>
+  </li>
+  <li>
+    <p>The NEA instructs the API to start provisioning. The API starts to scan for Nymi Bands in provisioning mode.</p>
+  </li>
+  <li>
+    <p>To ensure the NEA has found the right Nymi Band, since there may be multiple bands in simultaneous provisioning mode, a 
+  pattern must be matched. This pattern is generated on the Nymi Band, and projected onto the lights of the Nymi Band. This pattern is also computed independently by the API, and sent to the NEA. It is up to the wearer of the Nymi Band to confirm that 
+  the pattern generated on the Nymi Band matches the pattern generated by the API. This step is referred to as <em>agreement</em>.</p>
+  </li>
+  <li>The NEA now has the pattern of <em>some</em> provisioning band that it has connected with. The NEA can either:
+    <ul>
+      <li>display the pattern to the user, and ask for confirmation that the displayed pattern matches that on the Nymi Band
+ OR</li>
+      <li>ask the user to input the pattern on their Nymi Band, and proceed if it matches the pattern sent to the NEA by the API</li>
+    </ul>
+
+    <p>The first approach is more convenient for the user, while the second provides greater certainty of a correct match.</p>
+  </li>
+  <li>
+    <p>After the user confirms a match, the NEA confirms to the Nymi Band that it wants to provision with it.</p>
+  </li>
+  <li>The NEA then receives a provision ID (<code>pid</code>) from the Nymi Band, confirming that the two are provisioned. <strong>Important:</strong> The provision ID must be kept private to the NEA.</li>
+</ol>
+
+<p>The provision can be invalidated by either party unilaterally. A provision on the Nymi Band can be removed through the Nymi Band app or through the JSON API. An NEA invalidates a provision by destroying or eliminating access to the provision ID.</p>
+
+<h3 id="bound-authentication">Bound Authentication</h3>
+
+<p>Consider an application in which a decision or task depends on the presence of a provisioned Nymi Band. 
+  For example, when a user specifies intent to log into a service or device, an NEA administrating the login needs to
+  authenticate the user based on the presence of her Nymi Band. The Nymi API communicates that it has securely authenticated the
+  Nymi Band through the <code>found</code> enum, which must take the value of <code>found::authenticated</code>. Remember that <a href="#nymi-band-information">retrieving information</a> from the Nymi Band is not the same as securely authenticating the band.</p>
+
+<p><strong>The Nymi Band is continuously broadcasting its authenticated state to its provisioned NEAs</strong>. The Nymi API allows synchronous and asynchronous approaches to receiving this broadcast. An NEA may poll the API to confirm that a provisioned Nymi Band is present 
+  (within Bluetooth transmission range) and authenticated, or it can register callbacks with the API, and request to be notified when the Nymi
+  Band’s status has changed. Neither of these approaches require a connection with the Nymi Band in the Bluetooth sense.</p>
+
+<h3 id="cryptographic-api">Cryptographic API</h3>
+
+<p>The Nymi Band exposes the following cryptographic functionality to NEAs with which it is provisioned.
+When using these features, the API establishes a Bluetooth connection with the Nymi Band.</p>
+
+<ul>
+  <li>
+    <p><strong>High-Quality Entropy</strong></p>
+
+    <p>The Nymi Band has a hardware-backed entropy source suitable for generating cryptographic keys. This can be queried by an NEA in 128 bit increments and is exposed in two forms:</p>
+
+    <ul>
+      <li>Pseudo-random number generation</li>
+      <li>Symmetric key generation and retrieval, with guarded option</li>
+    </ul>
+
+    <p>In the first form, the Nymi Band returns the 128 bit block without storing this block anywhere.</p>
+
+    <p>In the second form, the 128 bit symmetric key, <em>K</em>, is stored on the Nymi Band. The key (<em>K</em>) is returned to the NEA.</p>
+
+    <p>The NEA must handle <em>K</em> carefully, as external parties are not privy to its value.
+  The NEA may keep <em>K</em> in volatile memory only for the purpose of, and within the scope and time necessary for, the NEA to perform the required cryptographic operations with <em>K</em>.
+  In particular, the NEA must never save <em>K</em> to persistent storage.</p>
+  </li>
+  <li>
+    <p><strong>Guarded Symmetric Keys</strong></p>
+
+    <p>Guarded symmetric keys add user intent to the key generation and retrieval. The first time a guarded symmetric key is requested for a provision, the Nymi Band notifies the user with haptic feedback and a light pattern. The user must confirm the request with a gesture (double tap) on the Nymi Band. If the gesture is not performed within 10 seconds of the notification, the operation will fail. Each time this guarded key is requested, the user must perform the gesture.</p>
+  </li>
+  <li>
+    <p><strong>Digital signing</strong></p>
+
+    <p>The Nymi Band can generate public-private key pairs &lt;<em>vk</em>,<em>sk</em>&gt; for Elliptic Curve Digital Signature Algorithm (ECDSA) signing. ECDSA requires the specification of both an elliptic curve and a hash function. The hash function is currently fixed as SHA256. The following curve types are
+  supported:</p>
+
+    <ul>
+      <li>NIST P-256</li>
+      <li>Secp256k1</li>
+    </ul>
+
+    <p>To request a signature, the NEA must specify the desired curve type and provide a message to be signed.</p>
+
+    <aside class="notice">The message supplied to the JSON API must be the 32 byte hash of
+  the original message.</aside>
+
+    <p>The secret key of the key pair, <em>sk</em> is saved on the Nymi Band and is not shared with any
+  parties. A 64-byte verification key <em>vk</em> and the signed message are returned to the NEA. 
+  Using standard cryptographic libraries, the NEA can verify the signature by providing the signed message, the original message, <em>vk</em>, and the ECDSA curve type to a verification function.</p>
+
+    <p>Example uses of this feature include SSH, which accepts NIST P-256 curves, and Bitcoin, which accepts Secp256k1 curves.</p>
+  </li>
+  <li>
+    <p><strong>Time-based one-time password (TOTP)</strong></p>
+
+    <p>The Nymi Band can generate time-based one-time password (TOTP) tokens using the current time and a secret key as inputs. Only the secret key needs
+  to be provided by the NEA. TOTP tokens are accepted as a second factor for login credentials at an increasing number of
+  web services. For example, you want to log into your account at site <em>X</em>, and <em>X</em> accepts TOTP tokens as a second factor of
+  authentication. The required workflow is as follows:</p>
+
+    <ul>
+      <li>
+        <p>One time setup:</p>
+
+        <ul>
+          <li>
+            <p>Enable 2-FA with site <em>X</em>.</p>
+          </li>
+          <li>
+            <p>Site <em>X</em> generates a secret key, often as a QR code.</p>
+          </li>
+          <li>
+            <p>An NEA provides the secret key in hexadecimal to the Nymi Band, where it is stored.</p>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p>Recurring step:</p>
+
+        <ul>
+          <li>At every subsequent login to site <em>X</em>, an NEA prompts the Nymi Band to generate a TOTP token. 
+This token, a 6-digit number by standard, should be passed to site <em>X</em> to satisfy 2-FA login requirements.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Guarded TOTP</strong></p>
+
+    <p>When registering a TOTP key, an NEA can configure the Nymi Band to require user confirmation, in the form of a gesture (double tap), for subsequent retrieval of tokens. At token retrieval time, an NEA’s request for such a <em>guarded</em> token will timeout in 10 seconds without user confirmation.</p>
+  </li>
+</ul>
+
+<h3 id="providing-feedback-to-the-nymi-band">Providing Feedback to the Nymi Band</h3>
+
+<p>An NEA can send haptic feedback to a Nymi Band, to communicate a positive or negative result/outcome to the user. A positive outcome is a single vibration (or ‘buzz’), while a negative one is a double vibration (buzz twice).</p>
+
+<h2 id="roaming-authenticator">Roaming Authenticator</h2>
+
+<p>Imagine the use case where a user needs to authenticate herself to a public terminal, such as an airport kiosk, a payments
+terminal, hospital terminals, or hotel smart locks. These terminals process
+high user traffic, and a user’s interaction with such terminals may be short-lived, possibly a single encounter. Furthermore, it is not possible to provision a user’s Nymi Band with each terminal with which the user might interact. As this
+use case does not lend itself to the utility of a <a href="#bound-authenticator">bound authenticator</a>, the API has the notion of a roaming authenticator.</p>
+
+<p>If a Nymi Band has been provisioned with a relying party’s NEA, thereby establishing a trusted relationship, the Nymi Band
+can be identified by one or more terminals (unprovisioned devices) administered by the relying party, provided that: the terminals
+communicate with the relying party’s server, and the NEA has communicated the provisioning to the server.</p>
+
+<p>The roaming authentication mechanism allows users to register (provision) their Nymi Bands with back-end identity systems through an enrollment NEA, and enables unprovisioned terminal NEAs to authenticate against a registered Nymi Band via the identity system.</p>
+
+<h3 id="registration">Registration</h3>
+
+<p>A Nymi Band provisions with an enrollment NEA owned by the relying party. The Nymi Band and the relying party exchange public keys through the enrollment NEA, allowing for mutual identification between the two in future encounters. The message diagram below illustrates the registration process.</p>
+
+<p><img alt="roaming-setup" src="images/roaming_setup.png" /></p>
+
+<h3 id="roaming-authentication">Roaming Authentication</h3>
+
+<p>After registration, the Nymi Band can be presented as an authenticator to the relying party’s terminals. Such terminals also run an NEA that is not provisioned to the Nymi Band. The terminal NEA and the Nymi Band engage in two-way ECDSA signature verification.</p>
+
+<p>The terminal’s NEA retrieves an advertisement nonce through a Nymi API function call and passes it to the relying party server. The server signs the
+hash of the Nymi Band’s nonce along with a server nonce. This can be any random value generated by the server. This signature
+is sent to the Nymi Band for verification. The server nonce and the relying party public key are also sent along with the signature.</p>
+
+<p>The Nymi Band uses the relying party’s public key to verify the signature. If verification is successful, the Nymi Band signs the server nonce
+with its private key. This signature is sent to the terminal’s NEA, and passed along to the server for the verification. If this
+verification is also successful, the terminal is notified by the server to accept the Nymi Band as a token of authentication, and to allow
+the relevant access rights.</p>
+
+<p><img alt="roaming-setup" src="images/roaming_auth.png" /></p>
+
+<h2 id="security">Security</h2>
+
+<p>Authenticating with the Nymi Band means you are using strong cryptographic technologies for authentication that are backed by the biometric identification of the wearer.</p>
+
+<p>When an NEA gets an indication of the presence of a band, this is based on cryptographic authentication. In the case of bound authentication, there is a proof of possession of a shared secret key (the provision). In the case of roaming authentication, this is authentication based on possession of a signing key.</p>
+
+<p>All keying material stored on the Nymi Band is stored in such a way as to be completely inaccessible when the band is unauthenticated. Even if an attacker has physical access to the device, the keys used for authentication cannot be easily extracted.</p>
+
+<p>Another important element in the security design of the Nymi Band concerns the storage and usage of the biometric data. Data collected for the enrollment and matching of HeartID is stored only on the Nymi Band itself. Specifically, this data is not shared with
+NEAs that provision to the band.
+Moreover, the fact that the biometrics are stored in a decentralized manner means there is no biometric stockpile in the Nymi system. This is significant as biometric databases are appealing targets for cyber criminals, and reports of biometric database compromises are more and more common.</p>
+
+          <h2 id="nymi-communication">Nymi Communication</h2>
+
+<p>The Nymi communication stack is composed of the following layers:</p>
+
+<p><img alt="api-diagram" src="images/api_diagram.png" /></p>
+
+<p>The Nymi API Core communicates with the Nymi Band using the Nymi System Protocol (NSP) over Bluetooth Low Energy.
+Having our own system protocol over the Bluetooth protocol allows for stricter security policies, beyond
+what is offered by Bluetooth encryption.</p>
+
+<h2 id="json-api-wrappers">JSON API Wrappers</h2>
+
+<p>Wrappers specialize the JSON API for a specific language. They are an interface for communicating with the Nymi JSON API that is native to a specific language, such as the C++ wrapper included in the C++ sample app. This interface abstracts away the construction of JSON objects, and allows the NEA to focus on the higher level application logic.</p>
+
+<p>Communication with the Nymi Band is highly asynchronous. A wrapper may hide this asynchronicity by blocking until an expected event is received, or a timeout has occurred. This allows the NEA to receive a synchronous response to a request. The wrapper may also facilitate callbacks to the NEA, for events where the NEA requests to be notified. An example of such an event is when a Nymi Band’s presence state changes.</p>
+
+<p>It is important to note that wrappers are not mandatory, and that an NEA can interface directly with the
+JSON API. Wrappers only serve to simplify writing an NEA.</p>
+
+<h2 id="nymi-json-api">Nymi JSON API</h2>
+
+<p>For a detailed account of Nymi JSON API classes, see the 
+<a href="./jsonreference/index.html">JSON API Reference Documentation</a>.</p>
+
+<h2 id="using-the-nymulator">Using the Nymulator</h2>
+
+<p>The Nymulator is a standalone application supported on Windows OS and OS X that simulates up to <em>6</em> physical Nymi Bands, for development
+and testing of NEAs. Simulated Nymi Bands are <em>always</em> enrolled and authenticated, since NEAs interact with Nymi Bands
+only within this capacity.</p>
+
+<p>The Nymulator simulates the <em>logic</em> and the <em>state</em> of a Nymi Band, not the physical hardware. While the message content
+sent between a virtual Nymi Band and an NEA are the same as those of a physical band, the communication channel is TCP/IP
+as opposed to Bluetooth Low Energy. Because it runs on the network, the host machine on which the Nymulator is running can differ from the
+device running the NEA. For example, your Android NEA can communicate with an instance of the Nymulator running on your desktop.</p>
+
+<p>Virtual Nymi Bands support the same feature set as the physical band. This includes <a href="#roaming-authentication">roaming authentication</a>, sending <a href="#providing-feedback-to-the-nymi-band">haptic feedback</a>, <a href="#cryptographic-api">cryptographic</a> functionality, and <a href="#bound-authentication">continuous authentication</a> for bound authenticators.</p>
+
+<p>The following table provides an overview of the various features of the Nymulator app.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Feature</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Add</td>
+      <td>Creates a new Nymi Band instance. The result is an enrolled and authenticated Nymi Band with no provisions. You can add up to 6 Nymi Bands simultaneously. Each Nymi Band can have up to 6 provisions, the same as for a physical band.</td>
+    </tr>
+    <tr>
+      <td>Rename</td>
+      <td>Click the pencil in the right panel to rename a Nymi Band.</td>
+    </tr>
+    <tr>
+      <td>Remove</td>
+      <td>Hover over a Nymi Band in the left panel list and click X to remove it.</td>
+    </tr>
+    <tr>
+      <td>Save</td>
+      <td>Save the current list of Nymi Bands. This saves all associated provisions and keys.</td>
+    </tr>
+    <tr>
+      <td>Load</td>
+      <td>Load a previously saved list of Nymi Bands.</td>
+    </tr>
+    <tr>
+      <td>Nymi Band UI</td>
+      <td>The top right image reflects the UI of the Nymi Band. It conveys haptic notifications through GUI shake, as well as LED patterns and animations, for example, for provisioning agreement.</td>
+    </tr>
+    <tr>
+      <td>RSSI scrollbar</td>
+      <td>Use the RSSI scroll bar to simulate the RSSI value of a Nymi Band; a lower values maps to a weaker Bluetooth signal strength. If RSSI is set to -100, the Nymi Band stops advertising. This simulates the Nymi Band moving out of Bluetooth transmission range. To enable advertisement, set the RSSi to any value greater than -100.</td>
+    </tr>
+    <tr>
+      <td>Context-sensitive Button</td>
+      <td>The text on the button under the RSSI scrollbar reflects its context-sensitive functionality. For example, it may say “Begin Provisioning” or “Quad Tap”. The latter message simulates a user’s quad tap gesture on the Nymi Band. By default, quad tap is used to put the Nymi Band in provisioning mode.</td>
+    </tr>
+    <tr>
+      <td>Activity Log</td>
+      <td>Logs results of user actions (such as adding a band) as well as the state of the Nymi Band (for example, advertising).</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="connecting-to-the-nymulator">Connecting to the Nymulator</h3>
+
+<p>To connect to the Nymulator, the following <em>general</em> requirements must be met. Specific requirements are specified in the <a href="#developer-quick-start">Developer Quick Start</a>.</p>
+
+<ul>
+  <li>
+    <p>The Nymulator must be invoked <em>before</em> the NEA is started, otherwise the API will fail to initialize.</p>
+  </li>
+  <li>
+    <p>On OS X there is a distinction in the API library/executable for connecting to the Nymulator vs the physical Nymi Band. The NEA must link/run against the Nymulator version of the Nymi API.</p>
+  </li>
+  <li>
+    <p>The Nymulator host machine and the NEA host device must be on the same network. The NEA may need to specify the IP address/port number of the
+Nymulator host machine.</p>
+
+    <aside class="notice">Note that connecting an Android phone to a computer via a cable does not put them on the same WiFi network.</aside>
+  </li>
+  <li>
+    <p>The default port of the Nymulator is <strong>9088</strong>. If this port is in use, it will decrement the port number to find an open port.</p>
+  </li>
+</ul>
+
+<p><strong>Windows OS Specific Requirements</strong></p>
+
+<ul>
+  <li><a href="https://www.microsoft.com/en-ca/download/details.aspx?id=40784">Microsoft Visual Studio 2013 Redistributable</a> is required.</li>
+</ul>
+
+          <h1 id="glossary">Glossary</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Term</th>
+      <th>Definition</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Authenticator</td>
+      <td>A device that is responsible for securely verifying the user to various relying parties, and maintaining the cryptographic material required for the relying party authentication.</td>
+    </tr>
+    <tr>
+      <td>Bluetooth<sup>®</sup> Low Energy</td>
+      <td>A wireless technology that consumes a fraction of the power of Classic Bluetooth<sup>®</sup>. The Nymi Band uses Bluetooth<sup>®</sup> Low Energy to communicate with other devices.</td>
+    </tr>
+    <tr>
+      <td>Bound Authenticator</td>
+      <td>An authenticator that provisions with a restricted set of trusted devices.</td>
+    </tr>
+    <tr>
+      <td>Callback</td>
+      <td>A function defined in an NEA that is to be called by the Nymi API under some well-defined circumstance.</td>
+    </tr>
+    <tr>
+      <td>ECG</td>
+      <td>Electrocardiogram is a measure of electrical activity of the heart. This signal is analyzed by the HeartID algorithm.</td>
+    </tr>
+    <tr>
+      <td>HeartID</td>
+      <td>An algorithm developed by Nymi that uses machine learning to extract underlying features of an ECG signal, and uses these features in ECG recognition</td>
+    </tr>
+    <tr>
+      <td>Nymi Band App</td>
+      <td>An application developed by Nymi which is required to set up and manage the Nymi Band.</td>
+    </tr>
+    <tr>
+      <td>NEA</td>
+      <td>Nymi-enabled Application. An application developed by a relying party that uses the Nymi API to communicate with the Nymi Band.</td>
+    </tr>
+    <tr>
+      <td>Nymi Ecosystem</td>
+      <td>The collection of Nymi Bands, Nymi Band apps, NEAs, Nymi-based identity systems, and the interactions between these entities.</td>
+    </tr>
+    <tr>
+      <td>Provisioning</td>
+      <td>The sharing of a secret cryptographic key that allows a Nymi Band and an NEA on a particular device to securely identify each other.</td>
+    </tr>
+    <tr>
+      <td>Relying Party</td>
+      <td>(RP) An entity with a physical or web presence that uses the Nymi Band to authenticate its users.</td>
+    </tr>
+    <tr>
+      <td>Roaming Authenticator</td>
+      <td>An authenticator that is configured to communicate with unprovisioned devices of a relying party, provided that it is provisioned with the relying party’s <em>enrollment</em> NEA.</td>
+    </tr>
+    <tr>
+      <td>RSSI</td>
+      <td>Received Signal Strength Indicator. A measure of the strength of an incoming Bluetooth<sup>®</sup> wireless signal in the range [-1 (<em>very</em> strong), -90 (weak)]. Lower RSSI values map to weaker Bluetooth<sup>®</sup> wireless signal strength.</td>
+    </tr>
+  </tbody>
+</table>
+
+          <h1 id="links-and-downloads">Links and Downloads</h1>
+
+<h3 id="sdk-for-windows-and-mac-os">SDK for Windows and Mac OS</h3>
+
+<p>See <a href="#supported-platforms">Supported Platforms</a> for a list of supported operating systems.</p>
+
+<p><a href="https://github.com/Nymi/JSON-API/releases">SDK 4.0</a> includes the JSON API, documentation, and the Nymulator.</p>
+
+<p><a href="./jsonreference/index.html">JSON API Reference Documentation</a></p>
+
+<h3 id="sample-applications">Sample Applications</h3>
+
+<p><a href="https://github.com/Nymi/JSON-API">NEA using C++ Wrapper</a></p>
+
+
+          <h1 id="trademarks">Trademarks</h1>
+
+<p>Nymi, Nymi Band, and HeartID are registered trademarks of Nymi Inc. Apple, App Store, Mac, OS X, Touch ID, and Xcode are trademarks of Apple Inc., registered in the U.S. and other countries. The Bluetooth® word mark and logos are registered trademarks owned by Bluetooth SIG, Inc. Firefox is a registered trademark of the Mozilla Foundation. Git and the Git logo are either registered trademarks or trademarks of Software Freedom Conservancy, Inc, corporate home of the Git Project, in the United States and/or other countries. GITHUB and the GITHUB logo design are exclusive trademarks registered in the United States by GitHub, Inc. Google, Android, Chrome, and Play are registered trademarks of Google Inc. Java is a registered trademark of Oracle and/or its affiliates. Microsoft and Windows are either registered trademarks or trademarks of Microsoft Corporation in the United States and/or other countries. UNIX is a registered trademark of The Open Group. All other trademarks, servicemarks, and registered trademarks are the property of their respective owners</p>
+
+
+      </div>
+      <div class="dark-box">
+      </div>
+    </div>
+  </body>
+</html>
